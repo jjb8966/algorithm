@@ -35,7 +35,7 @@ public class Main_15651 {
         values = new int[maxDigit + 1];        //1~M의 인덱스를 사용하기 위해
     }
 
-    //k번째 자리부터 조건에 맞는 원소를 고르는 재귀 함수
+    //startDigit 번째 자리부터 조건에 맞는 원소를 고르는 재귀 함수
     private static void recurrenceFunction(int startDigit) {
         // 1. 탐색이 끝난 경우
         if (startDigit == maxDigit + 1) {
@@ -45,7 +45,7 @@ public class Main_15651 {
 
             sb.append("\n");
         } else {                // 2. 탐색이 남은 경우
-            for (int candidate = 1; candidate <= maxNumber; candidate++) {     //k번째 자리에 올 수 있는 숫자 대입 후 k+1
+            for (int candidate = 1; candidate <= maxNumber; candidate++) {     //startDigit 번째 자리에 올 수 있는 숫자 대입 후 k+1
                 values[startDigit] = candidate;
 
                 recurrenceFunction(startDigit + 1);
