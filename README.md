@@ -1,8 +1,7 @@
 # algorithm
 
 ### 목차
-
-### 완전탐색 (Brute Force)
+### [완전탐색 (Brute Force)](https://github.com/jjb8966/algorithm/blob/main/BOJ/brute_force/brute_force.md)
 ### 정렬 (Sort)
 ### 이분 탐색 (Binary Search)
 ### 두 포인터 (Two Pointer)
