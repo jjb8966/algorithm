@@ -1,95 +1,101 @@
 package sort;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main_15970 {
-    private static int N;       //점의 개수
-    private static int[] distances;
+
     private static Dot[] dots;
+    private static int numberOfDot;
+    private static int sumOfArrow = 0;
 
-    static class Dot implements Comparable<Dot> {
-        private int coordinate;
-        private int color;
+    static class Dot implements Comparable<Dot>{
+        int coordinate;
+        int color;
 
-        public void setCoordinate(int coordinate) {
-            this.coordinate = coordinate;
-        }
-
-        public void setColor(int color) {
-            this.color = color;
-        }
-
-        // 오름차순 : this - 매개변수
         @Override
-        public int compareTo(Dot other) {               // 1. color를 기준으로 오름차순 정렬
-            if (this.color != other.color) {
-                return this.color - other.color;
+        public int compareTo(Dot other) {
+            return this.coordinate - other.coordinate;
+        }
+
+        public boolean isSameColor(Dot other) {
+            if (this.color == other.color) {
+                return true;
             }
 
-            return this.coordinate - other.coordinate;   // 2. coordinate를 기준으로 오름차순 정렬
+            return false;
         }
     }
 
-    public static void input() {
-        Scanner sc = new Scanner(System.in);
+    private static void input() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
 
-        N = sc.nextInt();
-        dots = new Dot[N];
-        distances = new int[N];
+        numberOfDot = Integer.parseInt(br.readLine());
 
-        for (int i = 0; i < N; i++) {
+        dots = new Dot[numberOfDot];
+
+        for (int i = 0; i < numberOfDot; i++) {
+            st = new StringTokenizer(br.readLine());
+
             dots[i] = new Dot();
-            dots[i].setCoordinate(sc.nextInt());
-            dots[i].setColor(sc.nextInt());
+            dots[i].coordinate = Integer.parseInt(st.nextToken());
+            dots[i].color = Integer.parseInt(st.nextToken());
         }
     }
 
-    public static void getResult() {
-        int leftDistance;
-        int rightDistance;
-        int result = 0;
+    private static void process() {
+        Arrays.sort(dots);  // 좌표 기준으로 오름차순 정렬
+
         Dot leftDot;
         Dot rightDot;
 
-        Arrays.sort(dots);
+        for (int targetIndex = 0; targetIndex < numberOfDot; targetIndex++) {
+            Dot targetDot = dots[targetIndex];
+            int lengthOfArrow;
+            int leftLength = 0;
+            int rightLength = 0;
 
-        // dots[i]에 대해 왼쪽 점과 오른쪽 점을 정하고 둘 중 더 거리가 짧은 점의 거리를 선택
-        for (int i = 0; i < dots.length; i++) {     // i = 0 : 가장 왼쪽 점, i = dots.length-1 : 가장 오른쪽 점
-            if (i != 0 && dots[i - 1].color == dots[i].color) {     //i=0인 경우 dots[i-1]에서 NPE 발생하기 때문에 제외
-                leftDot = dots[i - 1];
-                leftDistance = Math.abs(dots[i].coordinate - leftDot.coordinate);
-            } else {
-                leftDistance = 0;
+            // 왼쪽 화살표 길이 구하기
+            for (int leftIndex = targetIndex - 1; leftIndex >= 0; leftIndex--) {
+                if (targetDot.isSameColor(dots[leftIndex])) {
+                    leftDot = dots[leftIndex];
+                    leftLength = targetDot.coordinate - leftDot.coordinate;
+                    break;
+                }
             }
 
-            if (i != dots.length - 1 && dots[i].color == dots[i + 1].color) {   // i=dots.length-1인 경우 dots[i+1]에서 NPE 발생하기 때문에 제외
-                rightDot = dots[i + 1];
-                rightDistance = Math.abs(dots[i].coordinate - rightDot.coordinate);
-            } else {
-                rightDistance = 0;
+            // 오른쪽 화살표 길이 구하기
+            for (int rightIndex = targetIndex + 1; rightIndex < numberOfDot; rightIndex++) {
+                if (targetDot.isSameColor(dots[rightIndex])) {
+                    rightDot = dots[rightIndex];
+                    rightLength = rightDot.coordinate - targetDot.coordinate;
+                    break;
+                }
             }
 
-            if (leftDistance == 0) {
-                distances[i] = rightDistance;
-            } else if (rightDistance == 0) {
-                distances[i] = leftDistance;
-            } else if (leftDistance < rightDistance) {
-                distances[i] = leftDistance;
+            if (leftLength == 0) {          // 왼쪽에 점이 없는 경우
+                lengthOfArrow = rightLength;
+            } else if (rightLength == 0) {  // 오른쪽에 점이 없는 경우
+                lengthOfArrow = leftLength;
             } else {
-                distances[i] = rightDistance;
+                lengthOfArrow = Math.min(leftLength, rightLength);
             }
+
+            sumOfArrow += lengthOfArrow;
         }
-
-        for (int i : distances) {
-            result += i;
-        }
-
-        System.out.println(result);
     }
 
-    public static void main(String[] args) {
+    private static void output() {
+        System.out.println(sumOfArrow);
+    }
+
+    public static void main(String[] args) throws IOException {
         input();
-        getResult();
+        process();
+        output();
     }
 }
