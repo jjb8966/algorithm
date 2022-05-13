@@ -3,8 +3,8 @@
 ### 목차
 ### [완전탐색 (Brute Force)](https://github.com/jjb8966/algorithm/blob/main/BOJ/brute_force/brute_force.md)
 ### [정렬 (Sort)](https://github.com/jjb8966/algorithm/blob/main/BOJ/sort/sort.md)
-### [이분 탐색 (Binary Search)](https://github.com/jjb8966/algorithm/blob/main/BOJ/two_pointer/two_pointer.md)
-### 두 포인터 (Two Pointer)
+### 이분 탐색 (Binary Search)
+### [투 포인터 (Two Pointer)](https://github.com/jjb8966/algorithm/blob/main/BOJ/two_pointer/two_pointer.md)
 ### 그래프 탐색 (Graph Search)
 ### 트리 (Tree)
 ### 위상 정렬 (Topological Sort)
