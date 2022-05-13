@@ -1,6 +1,9 @@
 package two_pointer;
 
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 /**
  * 두 포인터 - left, right 모두 왼쪽에서 시작하는 경우
@@ -8,54 +11,61 @@ import java.util.Scanner;
  * 거기서 left 하나씩 옮겨보면서 right을 옮길지 말지 결정
  */
 public class Main_1806 {
-    private static int sequenceLength;
-    private static int targetNumber;
+
+    private static int numberOfSequence;
+    private static int targetSum;
+    private static int minLength = Integer.MAX_VALUE;
     private static int[] sequence;
 
-    public static void input() {
-        Scanner sc = new Scanner(System.in);
+    private static void input() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        sequenceLength = sc.nextInt();
-        targetNumber = sc.nextInt();
+        numberOfSequence = Integer.parseInt(st.nextToken());
+        targetSum = Integer.parseInt(st.nextToken());
 
-        sequence = new int[sequenceLength];
+        sequence = new int[numberOfSequence + 1];   // index : 1 ~ numberOfSequence
 
-        for (int i = 0; i < sequenceLength; i++) {
-            sequence[i] = sc.nextInt();
+        st = new StringTokenizer(br.readLine());
+        for (int i = 1; i <= numberOfSequence; i++) {
+            sequence[i] = Integer.parseInt(st.nextToken());
         }
     }
 
-    public static void twoPointer() {
-        int right = 0;
-        int sum = 0;
-        int count = 0;
-        int minCount = sequenceLength + 1;
+    private static void process() {
+        int right = 1;
+        int currentSum = 0;
+        int currentLength = 0;
 
-        for (int left = 0; left < sequenceLength; left++) {
-            // right를 옮길 수 있을 때 까지 옮기기
-            while (right < sequenceLength && sum < targetNumber) {
-                sum += sequence[right];
+        for (int left = 1; left <= numberOfSequence; left++) {
+            // right 를 옮길 수 있을 때 까지 옮기기
+            while (right <= numberOfSequence && currentSum < targetSum) {
+                currentSum += sequence[right];
                 right++;
             }
 
-            if (sum >= targetNumber) {
-                count = right - left;
+            // right 가 맨 끝까지 갔는데도 currentSum 이 targetSum 보다 작은 경우를 제외해야함
+            if (currentSum >= targetSum) {
+                currentLength = right - left;
             }
 
             // 정답 갱신
-            if (minCount > count) {
-                minCount = count;
+            if (minLength > currentLength) {
+                minLength = currentLength;
             }
 
-            // left - 1을 구간에서 제외
-            sum -= sequence[left];
+            // left 에 해당하는 값을 뻄
+            currentSum -= sequence[left];
         }
-
-        System.out.println(minCount);
     }
 
-    public static void main(String[] args) {
+    private static void output() {
+        System.out.println(minLength);
+    }
+
+    public static void main(String[] args) throws IOException {
         input();
-        twoPointer();
+        process();
+        output();
     }
 }
