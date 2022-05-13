@@ -231,3 +231,7 @@
 [10825번: 국영수](https://www.notion.so/10825-adfb5e945c1e4a8ba8ba15d6a5a79710)
 
 [1015번: 수열 정렬](https://www.notion.so/1015-e25052421c34494dab3ad226f7e13204)
+
+[11652번: 카드](https://www.notion.so/11652-724d33b989f04f9a9db5a392b1210ad3)
+
+[15970번: 화살표 그리기](https://www.notion.so/15970-006405a7025e4fdcae0fb09bb38f979b)
