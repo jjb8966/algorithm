@@ -4,56 +4,72 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.StringTokenizer;
 
+//Scanner를 쓰면 시간초과가 나고 BufferedReader를 쓰면 정답이되는 문제... 웬만하면 BufferedReader 쓰는게 좋을듯
+//static Scanner sc = new Scanner(System.in);
 public class Main_2470 {
-    //Scanner를 쓰면 시간초과가 나고 BufferedReader를 쓰면 정답이되는 문제... 웬만하면 BufferedReader 쓰는게 좋을듯
-    //static Scanner sc = new Scanner(System.in);
-    private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    private static int N;       //2~10만
-    private static int[] values;
 
-    public static void input() throws IOException {
-        String[] temp;
-        N = Integer.parseInt(br.readLine());
-        temp = br.readLine().split(" ");
+    private static int numberOfSolution;
+    private static int[] solutions;
+    private static int[] result = new int[2];
 
-        values = new int[N];
+    private static void input() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
 
-        for (int i = 0; i < N; i++) {
-            values[i] = Integer.parseInt(temp[i]);
+        numberOfSolution = Integer.parseInt(br.readLine());
+
+        solutions = new int[numberOfSolution];
+
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < numberOfSolution; i++) {
+            solutions[i] = Integer.parseInt(st.nextToken());
         }
-
-        Arrays.sort(values);
     }
 
-    public static void twoPointer() {
+    private static void process() {
         int left = 0;
-        int right = N - 1;
-        int sum;
-        int minimumSum = Integer.MAX_VALUE;
-        int[] result = new int[2];
+        int right = numberOfSolution - 1;
+        int currentSum = 0;
+        int resultSum = Integer.MAX_VALUE;
+
+        Arrays.sort(solutions);
 
         while (left < right) {
-            sum = values[left] + values[right];
+            currentSum = solutions[left] + solutions[right];
 
-            if (minimumSum > Math.abs(sum)) {
-                minimumSum = Math.abs(sum);
-                result[0] = values[left];
-                result[1] = values[right];
+            if (resultSum > Math.abs(currentSum)) {
+                resultSum = Math.abs(currentSum);
+                result[0] = solutions[left];
+                result[1] = solutions[right];
             }
 
-            if (sum > 0) {
-                right--;
-            } else {
+            if (currentSum < 0) {
                 left++;
+                continue;
+            }
+
+            if (currentSum > 0) {
+                right--;
+                continue;
+            }
+
+            if (currentSum == 0) {
+                result[0] = solutions[left];
+                result[1] = solutions[right];
+                break;
             }
         }
+    }
 
+    private static void output() {
         System.out.println(result[0] + " " + result[1]);
     }
 
     public static void main(String[] args) throws IOException {
         input();
-        twoPointer();
+        process();
+        output();
     }
 }
