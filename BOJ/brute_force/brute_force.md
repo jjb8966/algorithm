@@ -43,3 +43,7 @@ public static void main(String[] args) {
 [case 4 : 중복 X, 나열 X (순서 X) → N C M](https://www.notion.so/case-4-X-X-X-N-C-M-017552b12f3f456383acd376c72d6860)
 
 [14888번: 연산자 끼워넣기](https://www.notion.so/14888-61f2c62ea01741f7b1e0654f5d47624f)
+
+[9663번: N-Queen](https://www.notion.so/9663-N-Queen-e71bddce9bf74ad79b2ada29da4ffb50)
+
+[1182번: 부분수열의 합](https://www.notion.so/1182-1149999929144cc89f433c54b1c6ed54)
