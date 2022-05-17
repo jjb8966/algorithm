@@ -8,66 +8,74 @@ import java.util.StringTokenizer;
 
 public class Main_1253 {
 
-    private static int sequence;           // 1~2000
-    private static int[] values;     // 각 숫자 : -10억~10억
-    // 답을 찾는 과정에서 두 수를 더하는 경우 최대값이 20억을 넘지 않으므로 int로 충분
+    private static int lengthOfSequence;
+    private static int numberOfGoodNumber;
+    private static int[] sequence;
 
-    public static void input() throws IOException {
+    private static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        sequence = Integer.parseInt(br.readLine());
+
+        lengthOfSequence = Integer.parseInt(br.readLine());
+
+        sequence = new int[lengthOfSequence];
+
         StringTokenizer st = new StringTokenizer(br.readLine());
-        values = new int[sequence];
-
-        for (int i = 0; i < sequence; i++) {
-            values[i] = Integer.parseInt(st.nextToken());
+        for (int i = 0; i < lengthOfSequence; i++) {
+            sequence[i] = Integer.parseInt(st.nextToken());
         }
-
-        Arrays.sort(values);     // O(NlogN)
     }
 
-    public static void twoPointer() {
-        int sumOfGoodNumber = 0;
+    private static void process() {
+        Arrays.sort(sequence);
 
-        for (int i = 0; i < sequence; i++) {       // O(N)
-            int left = 0;
-            int right = sequence - 1;
-            int findNumber = values[i];
-
-            while (left < right) {          // left, right의 탐색 -> O(N)      최종 시간복잡도 : O(N^2) -> 4,000,000 (충분)
-                int sum = values[left] + values[right];
-
-                // 서로 다른 두 수의 합이어야 하므로 찾는 수와 인덱스가 같으면 left, right를 옮김
-                if (i == left) {
-                    left++;
-                    continue;
-                } else if (i == right) {
-                    right--;
-                    continue;
-                }
-
-                // findNumber를 두 수의 합으로 만들 수 있으면 good number
-                if (findNumber == sum) {
-                    sumOfGoodNumber++;
-                    break;
-                }
-
-                // 두 수의 합이 찾는 수보다 작으면 더 커지게 해야하므로 left를 오른쪽으로 이동
-                if (sum < findNumber) {
-                    left++;
-                }
-
-                // 두 수의 합이 찾는 수보다 크면 더 작아지게 해야하므로 right를 왼쪽으로 이동
-                if (sum > findNumber) {
-                    right--;
-                }
+        for (int candidate = 0; candidate < lengthOfSequence; candidate++) {
+            // 다른 위치의 같은 숫자가 있을 수 있으므로 sequence 의 인덱스 값을 넘겨야 함
+            if (isGoodNumber(candidate)) {
+                numberOfGoodNumber++;
             }
         }
+    }
 
-        System.out.println(sumOfGoodNumber);
+    public static boolean isGoodNumber(int candidateIndex) {
+        int left = 0;
+        int right = lengthOfSequence - 1;
+
+        while (left < right) {
+            int sum = sequence[left] + sequence[right];
+
+            // 서로 다른 두 수의 합이 sequence[candidateIndex] 이 되면 good number
+            if (left == candidateIndex) {
+                left++;
+                continue;
+            }
+
+            if (right == candidateIndex) {
+                right--;
+                continue;
+            }
+
+            if (sum < sequence[candidateIndex]) {
+                left++;
+            }
+
+            if (sum > sequence[candidateIndex]) {
+                right--;
+            }
+
+            if (sum == sequence[candidateIndex]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static void output() {
+        System.out.println(numberOfGoodNumber);
     }
 
     public static void main(String[] args) throws IOException {
         input();
-        twoPointer();
+        process();
+        output();
     }
 }
