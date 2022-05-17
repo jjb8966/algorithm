@@ -67,3 +67,9 @@
 ## 문제
 
 [1806번: 부분합](https://www.notion.so/1806-020ca674fac54ad68662e010de6895c8)
+
+[2470번: 두 용액](https://www.notion.so/2470-6df6cef382e1401eadb5528f0a93959e)
+
+[13144번: List of Unique Numbers](https://www.notion.so/13144-List-of-Unique-Numbers-e0a63a03c6ef4afe86e1b6023b6274f6)
+
+[1253번: 좋다](https://www.notion.so/1253-828065508efd4969b6799535e4f6617a)
