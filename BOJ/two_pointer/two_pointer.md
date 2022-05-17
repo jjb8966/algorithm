@@ -30,7 +30,7 @@
             for (int left = 0; left < lastIndex; left++) {
                 // right를 옮길 수 있을 때 까지 옮기기
                 while (right < lastIndex && "right가 멈출 조건식") {
-    								"조건값 변화"
+                    "조건값 변화"
                     right++;
                 }            
     
