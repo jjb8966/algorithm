@@ -15,90 +15,106 @@ import java.util.*;
  */
 public class Main_1260 {
 
-    private static StringBuilder sb = new StringBuilder();
-    private static ArrayList<ArrayList<Integer>> adjacencyList = new ArrayList<>();
     private static int numberOfVertex;
     private static int numberOfEdge;
-    private static int startVertex;
-    private static boolean[] visited;
+    private static int startNumber;
+    private static int[] visited;
+    private static ArrayList<Integer>[] adjacencyList;
+    private static StringBuilder sb = new StringBuilder();
 
     private static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
+        int a;
+        int b;
 
         numberOfVertex = Integer.parseInt(st.nextToken());
         numberOfEdge = Integer.parseInt(st.nextToken());
-        startVertex = Integer.parseInt(st.nextToken());
+        startNumber = Integer.parseInt(st.nextToken());
 
-        for (int i = 0; i <= numberOfVertex; i++) {     // 인덱스 : 1 ~ numberOfVertex
-            adjacencyList.add(new ArrayList<>());
+        adjacencyList = new ArrayList[numberOfVertex + 1]; // index : 1 ~ numberOfVertex
+        visited = new int[numberOfVertex + 1];  // index : 1 ~ numberOfVertex
+
+        for (int i = 1; i <= numberOfVertex; i++) {
+            adjacencyList[i] = new ArrayList<>();
         }
 
-        visited = new boolean[numberOfVertex + 1];      // 인덱스 : 1 ~ numberOfVertex
-
-        for (int i = 0; i < numberOfEdge; i++) {
+        for (int i = 1; i <= numberOfEdge; i++) {
             st = new StringTokenizer(br.readLine());
 
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
+            a = Integer.parseInt(st.nextToken());
+            b = Integer.parseInt(st.nextToken());
 
-            adjacencyList.get(a).add(b);
-            adjacencyList.get(b).add(a);
-        }
-
-        for (ArrayList<Integer> integers : adjacencyList) {
-            Collections.sort(integers);
-        }
-    }
-
-    private static void dfs(int start) {
-        visited[start] = true;
-        sb.append(start).append(" ");
-
-        for (Integer adjacencyVertex : adjacencyList.get(start)) {
-            if (!visited[adjacencyVertex]) {
-                dfs(adjacencyVertex);
-            }
-        }
-    }
-
-    private static void bfs(int start) {
-        Queue<Integer> queue = new LinkedList<>();
-
-        queue.add(start);
-        visited[start] = true;
-
-        while (!queue.isEmpty()) {
-            int bottomVertex = queue.poll();
-
-            sb.append(bottomVertex).append(" ");
-
-            for (Integer adjacencyVertex : adjacencyList.get(bottomVertex)) {
-                if (!visited[adjacencyVertex]) {
-                    queue.add(adjacencyVertex);
-                    visited[adjacencyVertex] = true;
-                }
-            }
+            adjacencyList[a].add(b);
+            adjacencyList[b].add(a);
         }
     }
 
     private static void process() {
-        dfs(startVertex);
+        sort();
+        dfs(startNumber);
         reset();
-        bfs(startVertex);
-        System.out.println(sb);
+        bfs(startNumber);
     }
 
-    private static void reset() {
+    private static void sort() {
         for (int i = 1; i <= numberOfVertex; i++) {
-            visited[i] = false;
+            Collections.sort(adjacencyList[i]);
         }
+    }
 
-        sb.append('\n');
+    private static void dfs(int number) {
+        visited[number]++;
+
+        sb.append(number).append(' ');
+
+        for (Integer reachableVertex : adjacencyList[number]) {
+            if (visited[reachableVertex] == 1) {
+                continue;
+            }
+
+            dfs(reachableVertex);
+        }
+    }
+
+    private static void bfs(int startNumber) {
+        Queue<Integer> queue = new LinkedList<>();
+        int pollVertex;
+
+        queue.add(startNumber);
+        visited[startNumber]++;
+
+        while (!queue.isEmpty()) {
+            pollVertex = queue.poll();
+
+            sb.append(pollVertex).append(' ');
+
+            for (Integer reachableVertex : adjacencyList[pollVertex]) {
+                if (visited[reachableVertex] == 1) {
+                    continue;
+                }
+
+                queue.add(reachableVertex);
+                visited[reachableVertex]++;
+            }
+        }
+    }
+
+    private static void output() {
+        System.out.println(sb);
     }
 
     public static void main(String[] args) throws IOException {
         input();
         process();
+        output();
+    }
+
+    private static void reset() {
+        for (int i = 1; i <= numberOfVertex; i++) {
+            visited[i] = 0;
+        }
+
+        sb.append('\n');
     }
 }
