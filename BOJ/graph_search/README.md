@@ -7,10 +7,8 @@
     - 무방향 or 방향
     - 가중치 유무
 
-  ![방향 o, 가중치 o](![Untitled 0](https://user-images.githubusercontent.com/87421893/170044564-0b769c3b-9386-4ce0-9c25-d9560b6aefa5.png)
-)
+![Untitled 0](https://user-images.githubusercontent.com/87421893/170044564-0b769c3b-9386-4ce0-9c25-d9560b6aefa5.png)
 
-  방향 o, 가중치 o
 
 - 차수
     - deg(x)
@@ -33,8 +31,7 @@
     int[][] adjacencyMatrix = int new[vertex][vertex];
     ```
 
-  ![Untitled](![Untitled 1](https://user-images.githubusercontent.com/87421893/170044602-1b1e1732-8f5b-4b59-b5be-a9eb3a1d6195.png)
-)
+![Untitled 1](https://user-images.githubusercontent.com/87421893/170044602-1b1e1732-8f5b-4b59-b5be-a9eb3a1d6195.png)
 
 - 공간 복잡도 : O(V^2)
     - 메모리를 너무 많이 차지함
@@ -66,8 +63,8 @@
     ArrayList<Integer>[] adjacencyList; // 이게 쓰기 더 편한듯
     ```
 
-  ![Untitled](![Untitled 2](https://user-images.githubusercontent.com/87421893/170044648-eb3f8e4e-9015-417f-9ba4-0ce082820437.png)
-)
+![Untitled 2](https://user-images.githubusercontent.com/87421893/170044648-eb3f8e4e-9015-417f-9ba4-0ce082820437.png)
+
 
 - 공간 복잡도 : O(E)
     - `모든 정점의 차수합`만큼 필요
@@ -93,8 +90,7 @@
       → `인접 리스트`를 더 많이 씀
 
 
-    ![Untitled](![Untitled 3](https://user-images.githubusercontent.com/87421893/170044698-5948c68e-80ce-4527-9a65-ff733f34484a.png)
-)
+![Untitled 3](https://user-images.githubusercontent.com/87421893/170044698-5948c68e-80ce-4527-9a65-ff733f34484a.png)
 
 
 ### 탐색 (Search)
@@ -114,7 +110,7 @@
 ### 핵심 코드
 
 ```java
-		"start 를 갈 수 있다는 걸 알고 방문한 상태"
+    "start 를 갈 수 있다는 걸 알고 방문한 상태"
     void dfs(int start) {
         "visit check"
         visit[start] = true;
