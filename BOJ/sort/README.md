@@ -75,17 +75,19 @@
         
         4-1.  a가 b보다 왼쪽에 있는 경우
         
-        ![IMG_FF426202C5FC-1.jpeg](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/119a1981-f675-4c1b-b867-212f6cdd8c28/IMG_FF426202C5FC-1.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220509%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220509T012951Z&X-Amz-Expires=86400&X-Amz-Signature=c07b6e03b35287d01d6d572c4d99dbdbbae625e1b7e7a382b574447b82828aff&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22IMG_FF426202C5FC-1.jpeg%22&x-id=GetObject)
-        
+        ![IMG_FF426202C5FC-1](https://user-images.githubusercontent.com/87421893/170046299-2a009806-2c54-4f24-8aed-4656e33fa0f4.jpeg)
+
+
         - a와 b 교환
         
         4-2.  a가 b보다 오른쪽에 있는 경우
         
-        ![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/4fa5d0e8-bd3c-4b92-ba81-b53eab1d56c9/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220509%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220509T013010Z&X-Amz-Expires=86400&X-Amz-Signature=3df22b5aa480e1280b492bb9477f1706ed4ebfe236a306fbbb0c9cca9671e79a&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Untitled.png%22&x-id=GetObject)
+        ![Untitled 0](https://user-images.githubusercontent.com/87421893/170046363-196398db-873f-442c-a62c-708828f98821.png)
         
         - pivot과 b 교환
             
-            ![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/fb58d711-7709-4949-82a5-0cd1361201bf/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220509%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220509T013025Z&X-Amz-Expires=86400&X-Amz-Signature=4937d7618af8dc25af4e7fcfbb04822732fb786cafa944c2aa7a3f20b4934b6b&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Untitled.png%22&x-id=GetObject)
+         ![Untitled 1](https://user-images.githubusercontent.com/87421893/170046427-bf7e46de-8d26-4545-b0ea-6e8c5d3f62fb.png)
+
             
 - 시간 복잡도 : O(NlogN) → 선택 정렬, 삽입 정렬보다 빠름
     - 삽입 정렬과 반대로 이미 어느 정도 정렬된 상태면 속도가 느림
