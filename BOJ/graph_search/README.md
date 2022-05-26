@@ -190,6 +190,16 @@
         - 큐에 값을 추가하는 것과 visit check는 한 세트라고 생각!
     - 큐에서 뺄 때 visit 체크를 하면 특수한 경우 에러가 날 수 있음
 
+## 3. Multisource BFS
+
+> 시작점이 여러 개인 BFS
+> 
+- 모든 시작점을 전부 Queue에 넣은 상태로 BFS 시작
+- 시간 복잡도는 O(V+E)로 동일함
+    
+![Untitled](https://user-images.githubusercontent.com/87421893/170497489-066d7760-fb21-4fbf-8075-b7c20264d73c.png)
+
+
 ## 문제
 
 [1260번: DFS와 BFS](https://www.notion.so/1260-DFS-BFS-89bf068a416042709d759895b6c99990)
@@ -197,3 +207,5 @@
 [2667번: 단지번호붙이기](https://www.notion.so/2667-a7655b572e4d4a17a3c121002bf6cd40)
 
 [2251번: 물통](https://www.notion.so/2251-6e2d8aeff503459f9d90c87f8a746c8b)
+
+[14502번: 연구소](https://www.notion.so/14502-7c089baf424940c9a331464fb1114cd4)
