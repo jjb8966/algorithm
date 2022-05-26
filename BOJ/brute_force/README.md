@@ -7,9 +7,11 @@
     - 백트래킹 : 답을 찾는 도중 그 경로가 닶이 될 수 없는 경우 뒤로 되돌아 가는 방식
 - 경우의 수 4가지
     
-    ![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/e140ce22-797a-4752-b4b4-006013e209c2/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220504%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220504T041948Z&X-Amz-Expires=86400&X-Amz-Signature=b17b505818aea5e9ee770b8da65e73e9d5aa8097b261d552713fc5a16bf43291&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Untitled.png%22&x-id=GetObject)
+![Untitled 0](https://user-images.githubusercontent.com/87421893/170045683-44458fd9-3c71-4831-a7b8-6e814e069c0b.png)
+
     
-    ![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/d7b25f16-2c4e-405e-99d4-288d2ffd6a33/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220504%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220504T042004Z&X-Amz-Expires=86400&X-Amz-Signature=ef437e8372a9ff64db6b240d620c4f9ea70393e84ef8f6a2cf517e4fbd4e855d&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Untitled.png%22&x-id=GetObject)
+![Untitled 1](https://user-images.githubusercontent.com/87421893/170045733-1cabce08-88c3-4761-9dba-0ae2b23e45a0.png)
+
     
 
 ## 2. 핵심 코드 - 재귀 함수
