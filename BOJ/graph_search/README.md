@@ -209,3 +209,7 @@
 [2251번: 물통](https://www.notion.so/2251-6e2d8aeff503459f9d90c87f8a746c8b)
 
 [14502번: 연구소](https://www.notion.so/14502-7c089baf424940c9a331464fb1114cd4)
+
+[2178번: 미로 탐색](https://www.notion.so/2178-820d8a41054c46d08dec59f3d81f2d1a)
+
+[1697번: 숨바꼭질](https://www.notion.so/1697-54243c7a36dc4afeb76d6d2cca9ef290)
