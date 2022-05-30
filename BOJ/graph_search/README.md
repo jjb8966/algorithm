@@ -213,3 +213,5 @@
 [2178번: 미로 탐색](https://www.notion.so/2178-820d8a41054c46d08dec59f3d81f2d1a)
 
 [1697번: 숨바꼭질](https://www.notion.so/1697-54243c7a36dc4afeb76d6d2cca9ef290)
+
+[3055번: 탈출](https://www.notion.so/3055-b850bec705f64f6080df0f78773f8552)
