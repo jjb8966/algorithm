@@ -4,78 +4,87 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 public class Main_1068 {
-    private static int countOfNode;
-    private static int erasedNode;
+
+    private static int numberOfNode;
+    private static int eraseNode;
     private static int rootNode;
-    private static int sumOfLeafNode = 0;
-    private static int[] parentOfNode;
-    private static ArrayList<Integer>[] adjacencyList;
+    private static int[] countLeafNode;
+    private static int[] parent;
 
-    public static void input() throws IOException {
+    private static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
 
-        countOfNode = Integer.parseInt(br.readLine());
+        numberOfNode = Integer.parseInt(br.readLine());
 
-        parentOfNode = new int[countOfNode];
-        adjacencyList = new ArrayList[countOfNode];
+        parent = new int[numberOfNode];
+        countLeafNode = new int[numberOfNode];
 
-        for (int i = 0; i < countOfNode; i++) {
-            adjacencyList[i] = new ArrayList<>();
-        }
+        st = new StringTokenizer(br.readLine());
 
-        String[] temp = br.readLine().split(" ");
+        for (int i = 0; i < numberOfNode; i++) {
+            parent[i] = Integer.parseInt(st.nextToken());
 
-        for (int i = 0; i < countOfNode; i++) {
-            parentOfNode[i] = Integer.parseInt(temp[i]);
-
-            if (parentOfNode[i] == -1) {        // 부모 노드가 -1이면 루트 노드
+            if (parent[i] == -1) {
                 rootNode = i;
             }
         }
 
-        erasedNode = Integer.parseInt(br.readLine());       // 트리에서 지울 노드
-
-        for (int i = 0; i < countOfNode; i++) {
-            if (parentOfNode[i] != -1) {                    // 부모 노드의 정보를 활용하여 adjacencyList를 만듦
-                adjacencyList[i].add(parentOfNode[i]);
-                adjacencyList[parentOfNode[i]].add(i);
-            }
-        }
+        eraseNode = Integer.parseInt(br.readLine());
     }
 
-    private static void erase(int node) {   // 매개변수로 넘겨받은 노드를 지움 -> 해당 노드와 부모 노드 사이의 관계를 끊음
-        if (node == rootNode) {             // rootNode가 매개변수로 넘어오면 리프 노드는 0
-            System.out.println("0");
+    private static void process() {
+        // 지우려는 노드가 루트 노드인 경우 -> 0을 출력하고 프로그램 종료
+        if (rootNode == eraseNode) {
+            System.out.println(0);
             System.exit(0);
         }
 
-        adjacencyList[parentOfNode[node]].remove((Integer) node);   // 해당 노드의 부모 노드에서 해당 노드의 정보 삭제
+        removeNode();
+        dfs(rootNode);
     }
 
-    public static void dfs(int node) {
-        if (adjacencyList[node].size() == 1 && parentOfNode[node] != -1) {  // adjacencyList의 크기가 1인 경우 -> 리프 노드 (루트 노드인 경우는 제외)
-            sumOfLeafNode++;
-        }
+    private static void removeNode() {
+        parent[eraseNode] = -1;
+    }
 
-        if (adjacencyList[node].isEmpty()) {     // 루트 노드가 리프 노드가 되는 경우 -> 리프 노드 1
-            sumOfLeafNode++;
-        }
+    private static void dfs(int node) {
+        ArrayList<Integer> myChildren = new ArrayList<>();
 
-        for (int temp : adjacencyList[node]) {
-            if (temp == parentOfNode[node]) {
-                continue;
+        // 자식 노드들을 먼저 구함
+        for (int candidate = 0; candidate < numberOfNode; candidate++) {
+            if (candidate != node && parent[candidate] == node) {
+                myChildren.add(candidate);
             }
-
-            dfs(temp);
         }
+
+        // 자식이 없다면 리프노드
+        if (myChildren.size() == 0) {
+            countLeafNode[node] = 1;
+            return;
+        }
+
+        // 모든 자식들에 대해 dfs
+        for (Integer child : myChildren) {
+            dfs(child);     // 자식에 대한 dfs 가 모두 끝나면 자식의 countLeafNode를 알 수 있음
+        }
+
+        while (!myChildren.isEmpty()) {
+            // 리프 노드 갯수 = 자식들의 리프 노드 갯수 합
+            countLeafNode[node] += countLeafNode[myChildren.remove(0)];
+        }
+    }
+
+    private static void output() {
+        System.out.println(countLeafNode[rootNode]);
     }
 
     public static void main(String[] args) throws IOException {
         input();
-        erase(erasedNode);
-        dfs(rootNode);
-        System.out.println(sumOfLeafNode);
+        process();
+        output();
     }
 }
