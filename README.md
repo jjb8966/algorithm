@@ -6,7 +6,7 @@
 ### 이분 탐색 (Binary Search)
 ### [투 포인터 (Two Pointer)](https://github.com/jjb8966/algorithm/blob/main/BOJ/two_pointer/README.md)
 ### [그래프 탐색 (Graph Search)](https://github.com/jjb8966/algorithm/blob/main/BOJ/graph_search/README.md)
-### 트리 (Tree)
+### [트리 (Tree)](https://github.com/jjb8966/algorithm/blob/main/BOJ/tree/README.md#%ED%8A%B8%EB%A6%AC-tree)
 ### 위상 정렬 (Topological Sort)
 ### 최단 거리 (Shortest Path)
 ### 동적 프로그래밍 (Dynamic Programming)
