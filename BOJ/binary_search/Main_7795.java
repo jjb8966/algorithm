@@ -43,12 +43,12 @@ public class Main_7795 {
         for (int i = 0; i < numberOfB; i++) {
             valuesForB[i] = Integer.parseInt(st.nextToken());
         }
-
-        Arrays.sort(valuesForB);
     }
 
     private static void process() {
         int sum = 0;
+
+        Arrays.sort(valuesForB);
 
         for (int a : valuesForA) {
             sum += binarySearch(a);
