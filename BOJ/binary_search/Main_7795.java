@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.StringTokenizer;
 
 /**
  * 이분 탐색 기본 아이디어 : 오름차순 정렬된 배열에서 특정 숫자 x보다 작은 숫자가 몇개 있는지 세는 것
@@ -13,80 +14,83 @@ import java.util.Arrays;
  * left > right --> 탐색 끝
  */
 public class Main_7795 {
-    private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    private static StringBuilder sb = new StringBuilder();
-    private static int testCase;
+
+    private static int numberOfTestcase;
     private static int numberOfA;
     private static int numberOfB;
-    private static int[] valuesOfA;
-    private static int[] valuesOfB;
+    private static int[] valuesForA;
+    private static int[] valuesForB;
+
+    private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    private static StringBuilder sb = new StringBuilder();
 
     private static void input() throws IOException {
-        String[] temp = br.readLine().split(" ");
+        StringTokenizer st;
 
-        numberOfA = Integer.parseInt(temp[0]);
-        numberOfB = Integer.parseInt(temp[1]);
+        st = new StringTokenizer(br.readLine());
+        numberOfA = Integer.parseInt(st.nextToken());
+        numberOfB = Integer.parseInt(st.nextToken());
 
-        valuesOfA = new int[numberOfA];
-        valuesOfB = new int[numberOfB];
+        valuesForA = new int[numberOfA];
+        valuesForB = new int[numberOfB];
 
-        temp = br.readLine().split(" ");
-
+        st = new StringTokenizer(br.readLine());
         for (int i = 0; i < numberOfA; i++) {
-            valuesOfA[i] = Integer.parseInt(temp[i]);
+            valuesForA[i] = Integer.parseInt(st.nextToken());
         }
 
-        temp = br.readLine().split(" ");
-
+        st = new StringTokenizer(br.readLine());
         for (int i = 0; i < numberOfB; i++) {
-            valuesOfB[i] = Integer.parseInt(temp[i]);
+            valuesForB[i] = Integer.parseInt(st.nextToken());
         }
 
-        Arrays.sort(valuesOfB);     // B를 정렬해놓고 A의 각 원소에 대해 이분탐색
-    }
-
-    // 이분탐색 기본 틀
-    private static int binarySearch(int a) {
-        int left = 0;
-        int right = numberOfB - 1;
-        int result = 0;
-
-        while (left <= right) {
-            int mid = (left + right) / 2;
-
-            if (valuesOfB[mid] < a) {
-                result = mid + 1;
-                left = mid + 1;
-            } else {
-                right = mid - 1;
-            }
-        }
-
-        return result;
+        Arrays.sort(valuesForB);
     }
 
     private static void process() {
         int sum = 0;
 
-        for (int a : valuesOfA) {
+        for (int a : valuesForA) {
             sum += binarySearch(a);
         }
 
         sb.append(sum).append('\n');
     }
 
-    private static void inputTestCase() throws IOException {
-        testCase = Integer.parseInt(br.readLine());
+    private static int binarySearch(int a) {
+        int start = 0;
+        int end = numberOfB - 1;
+        int mid;
+        int result = 0;
+
+        while (start <= end) {
+            mid = (start + end) / 2;
+
+            if (valuesForB[mid] < a) {
+                result = mid + 1;
+                start = mid + 1;
+            }
+
+            if (valuesForB[mid] >= a) {
+                end = mid - 1;
+            }
+        }
+
+        return result;
+    }
+
+    private static void output() {
+        System.out.println(sb);
     }
 
     public static void main(String[] args) throws IOException {
-        inputTestCase();
+        numberOfTestcase = Integer.parseInt(br.readLine());
 
-        for (int i = 0; i < testCase; i++) {
+        for (int i = 0; i < numberOfTestcase; i++) {
             input();
             process();
         }
 
-        System.out.println(sb);
+        output();
     }
 }
