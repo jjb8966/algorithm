@@ -1,7 +1,9 @@
 package binary_search;
 
-import java.util.Arrays;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 /**
  * [매개변수 탐색] - 문제에서 최대값/최솟값 구해야 하는 경우 시도해볼만 함
@@ -15,65 +17,80 @@ import java.util.Scanner;
  */
 
 public class Main_2805 {
-    private static Scanner sc = new Scanner(System.in);
-    private static int countOfTree;
-    private static int neededHeight;          // N : 나무의 수(1~100만), M : 가져갈 나무의 길이(1~20억)
-    private static int[] treeHeights;     // 나무의 높이(1~10억)
 
-    public static void input() {
-        countOfTree = sc.nextInt();
-        neededHeight = sc.nextInt();
+    private static int numberOfTree;
+    private static int needTreeHeight;
+    private static int[] treeHeights;
 
-        treeHeights = new int[countOfTree];
+    private static int findHeight = 0;
 
-        for (int i = 0; i < countOfTree; i++) {
-            treeHeights[i] = sc.nextInt();
+    private static void input() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        numberOfTree = Integer.parseInt(st.nextToken());
+        needTreeHeight = Integer.parseInt(st.nextToken());
+
+        treeHeights = new int[numberOfTree];
+
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < numberOfTree; i++) {
+            treeHeights[i] = Integer.parseInt(st.nextToken());
         }
-
-        Arrays.sort(treeHeights);
     }
 
-    // 풀이의 핵심이 되는 메소드. 답이 되는 조건을 잘 파악하고 작성할 것.
-    // 나무 높이 height를 설정했을 때 M의 나무를 가져갈 수 있는가? Y / N
-    public static boolean isCorrect(int height) {
-        long sum = 0;     //나무의 최대 높이는 10억이고 나무의 최대 갯수는 100만이기 때문에 sum의 최댓값은 10억 * 100만이므로 int로 선언하면 오버플로우 발생
-
-        for (int i = 0; i < treeHeights.length; i++) {
-            if (treeHeights[i] > height) {
-                sum += treeHeights[i] - height;
-            }
-        }
-
-        if (sum >= neededHeight) {       //height 높이로 자른 나무 길이 총합이 M보다 크거나 같은 경우 true
-            return true;
-        }
-
-        return false;
+    private static void process() {
+        binarySearch();
     }
 
-    // Parametric Search에서 반복적으로 사용되는 메소드 -> 암기!!!!!!!!!!!
-    // left, right만 문제에 맞게 작성해주면 됨
-    public static void parametricSearch() {
-        int left = 0;
-        int right = 1_000_000_000;
-        int result = 0;
+    private static void binarySearch() {
+        long start = 1L;
+        long end = 2_000_000_000L;
+        long height;
 
-        while (left <= right) {
-            int mid = (left + right) / 2;
+        while (start <= end) {
+            // 여기서 height를 int로 두고 형변환했다가 틀렸음!!
+            height = (start + end) / 2;
+            // int height = (int) (start + end) / 2; -> X
 
-            if (isCorrect(mid)) {
-                result = mid;
-                left = mid + 1;
+            if (isRightHeight(height)) {
+                start = height + 1;
+                findHeight = (int) height;
             } else {
-                right = mid - 1;
+                end = height - 1;
+            }
+        }
+    }
+
+    private static boolean isRightHeight(long candidateHeight) {
+        long sumOfTree = cutTrees(candidateHeight);
+
+        if (sumOfTree >= needTreeHeight) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private static long cutTrees(long candidateHeight) {
+        long sum = 0;
+
+        for (int treeHeight : treeHeights) {
+            if (treeHeight > candidateHeight) {
+                sum += treeHeight - candidateHeight;
             }
         }
 
-        System.out.println(result);
+        return sum;
     }
 
-    public static void main(String[] args) {
+    private static void output() {
+        System.out.println(findHeight);
+    }
+
+    public static void main(String[] args) throws IOException {
         input();
-        parametricSearch();
+        process();
+        output();
     }
 }
