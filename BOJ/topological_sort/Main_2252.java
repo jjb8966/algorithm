@@ -9,64 +9,75 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main_2252 {
+
+    private static int numberOfStudent;
+    private static int numberOfComparison;
+
     private static ArrayList<Integer>[] adjacencyList;
-    private static int countOfStudent;
-    private static int countOfCompare;
-    private static int[] indegree;
+    private static StringBuilder sb = new StringBuilder();
+    private static int[] inDegree;
 
-    public static void input() throws IOException {
+    private static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] temp = br.readLine().split(" ");
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        countOfStudent = Integer.parseInt(temp[0]);
-        countOfCompare = Integer.parseInt(temp[1]);
+        numberOfStudent = Integer.parseInt(st.nextToken());
+        numberOfComparison = Integer.parseInt(st.nextToken());
 
-        adjacencyList = new ArrayList[countOfStudent + 1];        // 인덱스 : 1 ~ countOfStudent
-        indegree = new int[countOfStudent + 1];
+        adjacencyList = new ArrayList[numberOfStudent + 1]; // index : 1 ~ numberOfStudent
+        inDegree = new int[numberOfStudent + 1];
 
-        for (int i = 1; i <= countOfStudent; i++) {
+        for (int i = 1; i <= numberOfStudent; i++) {
             adjacencyList[i] = new ArrayList<>();
         }
 
-        for (int i = 0; i < countOfCompare; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            int operand1 = Integer.parseInt(st.nextToken());
-            int operand2 = Integer.parseInt(st.nextToken());
+        for (int i = 1; i <= numberOfComparison; i++) {
+            st = new StringTokenizer(br.readLine());
+            int smallOne = Integer.parseInt(st.nextToken());
+            int bigOne = Integer.parseInt(st.nextToken());
 
-            adjacencyList[operand1].add(operand2);
-            indegree[operand2]++;
+            adjacencyList[smallOne].add(bigOne);    // smallOne -> bigOne
+            inDegree[bigOne]++;
         }
     }
 
-    public static void getResult() {
-        StringBuffer sb = new StringBuffer();
-        Queue<Integer> queue = new LinkedList<>();
+    private static void process() {
+        topologicalSort();
+    }
 
-        for (int i = 1; i <= countOfStudent; i++) {
-            if (indegree[i] == 0) {
-                queue.add(i);
+    private static void topologicalSort() {
+        Queue<Integer> inDegreeZeroVertex = new LinkedList<>();
+
+        for (int i = 1; i <= numberOfStudent; i++) {
+            if (inDegree[i] == 0) {
+                inDegreeZeroVertex.add(i);
             }
         }
 
-        while (!queue.isEmpty()) {
-            int outOfQueue = queue.poll();
+        while (!inDegreeZeroVertex.isEmpty()) {
+            int vertex = inDegreeZeroVertex.poll();
 
-            sb.append(outOfQueue).append(" ");
+            sb.append(vertex).append(' ');
 
-            for (Integer temp : adjacencyList[outOfQueue]) {
-                indegree[temp]--;
+            for (Integer taller : adjacencyList[vertex]) {
+                inDegree[taller]--;
 
-                if (indegree[temp] == 0) {
-                    queue.add(temp);
+                // 여기서 queue에 들어갈 정점을 체크하는게 시간을 줄이는 핵심 방법
+                // + 어차피 모든 정점이 큐에 한번씩만 들어가므로 visit 체크를 할 필요도 없음
+                if (inDegree[taller] == 0) {
+                    inDegreeZeroVertex.add(taller);
                 }
             }
         }
+    }
 
+    private static void output() {
         System.out.println(sb);
     }
 
     public static void main(String[] args) throws IOException {
         input();
-        getResult();
+        process();
+        output();
     }
 }
