@@ -4,7 +4,8 @@
 
 ## DAG (Directed Acyclic Graph)
 
-![Untitled](%E1%84%8B%E1%85%B1%E1%84%89%E1%85%A1%E1%86%BC%20%E1%84%8C%E1%85%A5%E1%86%BC%E1%84%85%E1%85%A7%E1%86%AF%20(Topological%20Sort)%2052682d9d790e4db88668dc69304d1b82/Untitled.png)
+![Untitled](https://user-images.githubusercontent.com/87421893/173366758-3a8bf0c4-95e5-454d-8544-e194fcd2f6e3.png)
+
 
 - Directed
     - 간선의 방향이 존재함
