@@ -1,63 +1,55 @@
 package brute_force;
 
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
-/**
- * 자연수 N과 M이 주어졌을 때, 아래 조건을 만족하는 길이가 M인 수열을 모두 구하는 프로그램을 작성하시오.
- * 1부터 N까지 자연수 중에서 M개를 고른 수열
- * 같은 수를 여러 번 골라도 된다.
- * 1 ≤ M ≤ N ≤ 7
- * [입력]
- * 3 2
- * [출력]
- * 1 1
- * 1 2
- * 1 3
- * 2 1
- * 2 2
- * 2 3
- * 3 1
- * 3 2
- * 3 3
- */
-//중복o , 순서o -> O(N^M)
 public class Main_15651 {
 
     private static StringBuilder sb = new StringBuilder();
     private static int maxNumber;
     private static int maxDigit;
-    private static int[] values;
+    private static int[] result;
 
-    private static void input() {
-        Scanner sc = new Scanner(System.in);
-        maxNumber = sc.nextInt();
-        maxDigit = sc.nextInt();
-        values = new int[maxDigit + 1];        //1~M의 인덱스를 사용하기 위해
+    public static void main(String[] args) throws IOException {
+        input();
+        process();
+        output();
     }
 
-    //startDigit 번째 자리부터 조건에 맞는 원소를 고르는 재귀 함수
-    private static void recurrenceFunction(int startDigit) {
-        // 1. 탐색이 끝난 경우
-        if (startDigit == maxDigit + 1) {
-            for (int digit = 1; digit <= maxDigit; digit++) {
-                sb.append(values[digit] + " ");
+    private static void input() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        maxNumber = Integer.parseInt(st.nextToken());
+        maxDigit = Integer.parseInt(st.nextToken());
+
+        result = new int[maxDigit + 1];     // 1 ~ maxDigit
+    }
+
+    private static void process() {
+        bruteForce(1);
+    }
+
+    private static void bruteForce(int digit) {
+        if (digit == maxDigit + 1) {
+            for (int i = 1; i <= maxDigit; i++) {
+                sb.append(result[i]).append(" ");
             }
 
             sb.append("\n");
-        } else {                // 2. 탐색이 남은 경우
-            for (int candidate = 1; candidate <= maxNumber; candidate++) {     //startDigit 번째 자리에 올 수 있는 숫자 대입 후 k+1
-                values[startDigit] = candidate;
+        } else {
+            for (int currentNumber = 1; currentNumber <= maxNumber; currentNumber++) {
+                result[digit] = currentNumber;
 
-                recurrenceFunction(startDigit + 1);
-
-                values[startDigit] = 0;
+                bruteForce(digit + 1);
             }
         }
     }
 
-    public static void main(String[] args) {
-        input();
-        recurrenceFunction(1);      //1번째 자리부터 올바른 원소를 고르는 함수\
+    private static void output() {
         System.out.println(sb);
     }
+
 }
