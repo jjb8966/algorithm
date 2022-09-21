@@ -87,6 +87,7 @@ public class Main_1916 {
 
     private static void dijkstra(int startCity) {
         PriorityQueue<City> queue = new PriorityQueue<>((Comparator.comparingInt(o -> o.distance)));
+
         // dist 배열 초기화
         for (int i = 1; i <= numberOfCity; i++) {
             if (i == startCity) {
@@ -99,25 +100,25 @@ public class Main_1916 {
         queue.add(new City(startCity, 0));  // queue에 들어가는 city : start -> nextCity
 
         while (!queue.isEmpty()) {
-            City city = queue.poll();
-            int cityNumber = city.getNumber();
-            int distance = city.getDistance();
+            City currentCity = queue.poll();
+            int currentCityNumber = currentCity.getNumber();
+            int currentCityDistance = currentCity.getDistance();
 
-            if (distance > minimumDistanceFromStartTo[cityNumber]) {
+            if (currentCityDistance > minimumDistanceFromStartTo[currentCityNumber]) {
                 continue;
             }
 
-            for (City adjacencyCity : adjacencyList[cityNumber]) {
-                int nextCity = adjacencyCity.getNumber();
-                int nextDistance = adjacencyCity.getDistance();
+            for (City nextCity : adjacencyList[currentCityNumber]) {
+                int nextCityNumber = nextCity.getNumber();
+                int nextCityDistance = nextCity.getDistance();
 
-                if ((distance + nextDistance) >= minimumDistanceFromStartTo[nextCity]) {
+                if ((currentCityDistance + nextCityDistance) >= minimumDistanceFromStartTo[nextCityNumber]) {
                     continue;
                 }
 
-                minimumDistanceFromStartTo[nextCity] = distance + nextDistance;
+                minimumDistanceFromStartTo[nextCityNumber] = currentCityDistance + nextCityDistance;
 
-                queue.add(new City(nextCity, minimumDistanceFromStartTo[nextCity]));
+                queue.add(new City(nextCityNumber, minimumDistanceFromStartTo[nextCityNumber]));
             }
         }
     }
