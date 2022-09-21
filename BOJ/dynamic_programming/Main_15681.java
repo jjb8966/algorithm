@@ -80,29 +80,24 @@ public class Main_15681 {
     }
 
     private static void updateCountOfSubTreeNode(int root) {
-        int sum = 0;
+        int countOfChildren = 0;
 
         for (Integer child : adjacencyList[root]) {
             if (child == parent[root]) {
                 continue;
             }
 
-            updateCountOfSubTreeNode(child);
+            countOfChildren++;
 
-            sum += countOfSubTreeNode[child];
+            updateCountOfSubTreeNode(child);
+            countOfSubTreeNode[root] += countOfSubTreeNode[child];
         }
 
-        long children = adjacencyList[root].stream()
-                .filter(n -> n != parent[root])
-                .count();
-
-        sum += children;
-
-        countOfSubTreeNode[root] = sum;
+        countOfSubTreeNode[root] += countOfChildren;
     }
 
     private static void output() {
-        System.out.println(sb);
+        System.out.print(sb);
     }
 
 }
