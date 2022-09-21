@@ -1,6 +1,9 @@
 package brute_force;
 
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 //중복x, 순서x -> O(N C M) = N! / M!(N-M)!
 public class Main_15650 {
@@ -8,47 +11,59 @@ public class Main_15650 {
     private static StringBuilder sb = new StringBuilder();
     private static int maxNumber;
     private static int maxDigit;
-    private static int[] used;
-    private static int[] values;
+    private static int[] result;
+    private static boolean[] used;
 
-    private static void input() {
-        Scanner sc = new Scanner(System.in);
-        maxNumber = sc.nextInt();
-        maxDigit = sc.nextInt();
-        used = new int[maxNumber + 1];  // 1 ~ maxNumber
-        values = new int[maxDigit + 1]; // 1 ~ maxDigit
+    public static void main(String[] args) throws IOException {
+        input();
+        process();
+        output();
     }
 
-    private static void recurrenceFunction(int startDigit) {
-        if (startDigit == maxDigit + 1) {
-            for (int digit = 1; digit <= maxDigit; digit++) {
-                sb.append(values[digit]).append(" ");
+    private static void input() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        maxNumber = Integer.parseInt(st.nextToken());
+        maxDigit = Integer.parseInt(st.nextToken());
+
+        result = new int[maxDigit + 1];     // 1 ~ maxDigit
+        used = new boolean[maxNumber + 1];
+    }
+
+    private static void process() {
+        bruteForce(1);
+    }
+
+    private static void bruteForce(int digit) {
+        if (digit == maxDigit + 1) {
+            for (int i = 1; i <= maxDigit; i++) {
+                sb.append(result[i]).append(" ");
             }
 
-            sb.append('\n');
+            sb.append("\n");
         } else {
-            for (int candidate = 1; candidate <= maxNumber; candidate++) {
-                if (used[candidate] == 1) { // 중복 허용 x
+            for (int currentNumber = 1; currentNumber <= maxNumber; currentNumber++) {
+                if (used[currentNumber]) {
                     continue;
                 }
 
-                values[startDigit] = candidate;
-                used[candidate] = 1;
-
-                if (values[startDigit - 1] < values[startDigit]) { // 오름차순
-                    recurrenceFunction(startDigit + 1);
+                if (currentNumber < result[digit - 1]) {
+                    continue;
                 }
 
-                values[startDigit] = 0;
-                used[candidate] = 0;
+                result[digit] = currentNumber;
+                used[currentNumber] = true;
+
+                bruteForce(digit + 1);
+
+                used[currentNumber] = false;
             }
         }
     }
 
-    public static void main(String[] args) {
-        input();
-        recurrenceFunction(1);
+    private static void output() {
         System.out.println(sb);
     }
-}
 
+}
