@@ -33,12 +33,10 @@ public class Main_11052 {
     }
 
     private static void process() {
-        int halfNumber;
-
         maxPrice[1] = pricePerCount[1];
 
         for (int targetNumber = 2; targetNumber <= numberOfCardToBuy; targetNumber++) {
-            halfNumber = targetNumber / 2;
+            int halfNumber = targetNumber / 2;
 
             for (int leftNumber = 1; leftNumber <= halfNumber; leftNumber++) {
                 int rightNumber = targetNumber - leftNumber;
