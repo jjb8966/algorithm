@@ -27,7 +27,6 @@ public class Main_2011 {
 
     private static void process() {
         if (encryptedNumbers.charAt(0) == '0') {
-            result[lengthOfNumbers - 1] = 0;
             return;
         }
 
@@ -43,7 +42,7 @@ public class Main_2011 {
                 resultByOneDigit = result[digit - 1];
             }
 
-            if (isInterpretable(digit-1, digit)) {
+            if (isInterpretable(digit - 1, digit)) {
                 if (digit == 1) {
                     resultByTwoDigit = 1;
                 } else {
