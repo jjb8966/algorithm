@@ -14,7 +14,6 @@ public class Main_2343 {
     private static int[] videos;
     private static long minBluRayLength;
 
-
     public static void main(String[] args) throws IOException {
         input();
         process();
@@ -71,51 +70,21 @@ public class Main_2343 {
     }
 
     private static int getCount(long currentLength) {
-        int startIndex = 0;
-        int endIndex = 0;
         int count = 0;
-        long sum;
+        long sum = 0;
 
-        while (endIndex < numberOfVideo) {
-            sum = getSum(startIndex, endIndex);
-
-            if (sum < currentLength) {
-                if (endIndex == numberOfVideo - 1) {
-                    count++;
-                }
-
-                endIndex++;
-            }
-
-            if (sum == currentLength) {
-                startIndex = endIndex + 1;
-                endIndex = endIndex + 1;
-                count++;
-            }
+        for (int i = 0; i < numberOfVideo; i++) {
+            sum += videos[i];
 
             if (sum > currentLength) {
-                if (startIndex == endIndex) {
-                    startIndex = endIndex + 1;
-                    endIndex = endIndex + 1;
-                } else {
-                    startIndex = endIndex;
-                }
-
                 count++;
+                sum = videos[i];
             }
         }
 
+        count++;
+
         return count;
-    }
-
-    private static long getSum(int start, int end) {
-        long result = 0;
-
-        for (int i = start; i <= end; i++) {
-            result += videos[i];
-        }
-
-        return result;
     }
 
     private static void output() {
