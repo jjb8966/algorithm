@@ -9,8 +9,19 @@ import java.util.Queue;
 public class Main_5639 {
 
     private static Node rootNode;
-    private static Queue<Integer> resultOfPreOrder = new LinkedList<>();
+    private static Queue<Integer> queue = new LinkedList<>();
+    private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     private static StringBuilder sb = new StringBuilder();
+
+    static class Node {
+        int key;
+        Node leftNode;
+        Node rightNode;
+
+        public Node(int key) {
+            this.key = key;
+        }
+    }
 
     public static void main(String[] args) throws IOException {
         input();
@@ -18,13 +29,15 @@ public class Main_5639 {
         output();
     }
 
-
     private static void input() throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String input = "";
+        while (true) {
+            String temp = br.readLine();
 
-        while ((input = br.readLine()) != null && !input.equals("")) {
-            resultOfPreOrder.add(Integer.parseInt(input));
+            if (temp == null || temp.equals("")) {
+                break;
+            }
+
+            queue.add(Integer.parseInt(temp));
         }
     }
 
@@ -33,74 +46,45 @@ public class Main_5639 {
         postOrder(rootNode);
     }
 
-    private static void makeTree() {
-        Node currentNode = new Node(resultOfPreOrder.poll());
-        rootNode = currentNode;
-
-        while (!resultOfPreOrder.isEmpty()) {
-            Node nextNode = new Node(resultOfPreOrder.poll());
-
-            if (nextNode.key < currentNode.key) {
-                currentNode.leftNode = nextNode;
-                nextNode.parentNode = currentNode;
-            }
-
-            if (nextNode.key > currentNode.key) {
-                findParentNode(nextNode, currentNode);
-            }
-
-            currentNode = nextNode;
-        }
-    }
-
-    private static void findParentNode(Node node, Node currentNode) {
-        if (currentNode == rootNode) {
-            rootNode.rightNode = node;
-            node.parentNode = rootNode;
-
+    private static void postOrder(Node node) {
+        if (node == null) {
             return;
         }
 
-        Node currentParent = currentNode.parentNode;
-
-        if (node.key < currentParent.key) {
-            currentNode.rightNode = node;
-            node.parentNode = currentNode;
-        }
-
-        if (node.key > currentParent.key) {
-            findParentNode(node, currentParent);
-        }
-    }
-
-    private static void postOrder(Node node) {
-        Node leftNode = node.leftNode;
-        Node rightNode = node.rightNode;
-
-        if (leftNode != null) {
-            postOrder(leftNode);
-        }
-
-        if (rightNode != null) {
-            postOrder(rightNode);
-        }
+        postOrder(node.leftNode);
+        postOrder(node.rightNode);
 
         sb.append(node.key).append('\n');
     }
 
-    private static void output() {
-        System.out.println(sb);
+    private static void makeTree() {
+        rootNode = new Node(queue.poll());
+
+        while (!queue.isEmpty()) {
+            insertNode(rootNode, queue.poll());
+        }
     }
 
-    static class Node {
-        int key;
-        Node parentNode;
-        Node leftNode;
-        Node rightNode;
-
-        public Node(int key) {
-            this.key = key;
+    private static void insertNode(Node node, Integer insertKey) {
+        if (insertKey < node.key) {
+            if (node.leftNode == null) {
+                node.leftNode = new Node(insertKey);
+            } else {
+                insertNode(node.leftNode, insertKey);
+            }
         }
+
+        if (insertKey > node.key) {
+            if (node.rightNode == null) {
+                node.rightNode = new Node(insertKey);
+            } else {
+                insertNode(node.rightNode, insertKey);
+            }
+        }
+    }
+
+    private static void output() {
+        System.out.println(sb);
     }
 
 }
