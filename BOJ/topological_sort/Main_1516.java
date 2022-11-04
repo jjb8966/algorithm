@@ -11,6 +11,7 @@ public class Main_1516 {
     private static int[] buildTime;
     private static int[] totalBuildTime;
     private static int[] inDegree;
+    private static int[] maxPreviousBuildTime;
     private static ArrayList<Integer>[] next;
     private static StringBuilder sb = new StringBuilder();
 
@@ -30,6 +31,7 @@ public class Main_1516 {
         totalBuildTime = new int[numberOfBuilding + 1];
         next = new ArrayList[numberOfBuilding + 1];
         inDegree = new int[numberOfBuilding + 1];
+        maxPreviousBuildTime = new int[numberOfBuilding + 1];
 
         for (int i = 1; i <= numberOfBuilding; i++) {
             next[i] = new ArrayList<>();
@@ -65,12 +67,12 @@ public class Main_1516 {
         }
 
         while (!queue.isEmpty()) {
-            Integer building = queue.poll();
+            Integer previousBuilding = queue.poll();
 
-            for (Integer nextBuilding : next[building]) {
-                // totalBuildTime[building]에 의해 totalBuildTime[nextBuilding]이 결정됨
-                if (totalBuildTime[nextBuilding] < buildTime[nextBuilding] + totalBuildTime[building]) {
-                    totalBuildTime[nextBuilding] = buildTime[nextBuilding] + totalBuildTime[building];
+            for (Integer nextBuilding : next[previousBuilding]) {
+                if (totalBuildTime[previousBuilding] > maxPreviousBuildTime[nextBuilding]) {
+                    maxPreviousBuildTime[nextBuilding] = totalBuildTime[previousBuilding];
+                    totalBuildTime[nextBuilding] = buildTime[nextBuilding] + maxPreviousBuildTime[nextBuilding];
                 }
 
                 inDegree[nextBuilding]--;
