@@ -14,7 +14,7 @@ public class Main_16918 {
     private static int[][] direction = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; //위, 아래, 왼쪽, 오른쪽
     private static char[][] map;
     private static boolean[][] existBomb;
-    private static ArrayList<Coordinate> seeds = new ArrayList<>();
+    private static ArrayList<Coordinate> seeds;
 
     static class Coordinate {
         int x;
@@ -64,19 +64,17 @@ public class Main_16918 {
     private static void process() {
         findSeed();
 
-        for (int i = 1; i <= time; i++) {
+        for (int i = 2; i <= time; i++) {
             int play = i % 2;
 
             if (play == 0) {
                 fillBomb();
             }
 
-            if (play == 1 && i != 1) {
+            if (play == 1) {
                 for (Coordinate seed : seeds) {
                     explodeBomb(seed);
                 }
-
-                seeds = new ArrayList<>();
 
                 findSeed();
             }
@@ -84,6 +82,8 @@ public class Main_16918 {
     }
 
     private static void findSeed() {
+        seeds = new ArrayList<>();
+
         for (int x = 0; x < height; x++) {
             for (int y = 0; y < width; y++) {
                 if (map[x][y] == 'O') {
