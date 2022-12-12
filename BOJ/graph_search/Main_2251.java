@@ -10,23 +10,34 @@ public class Main_2251 {
     private static final int B = 1;
     private static final int C = 2;
 
-    private static StringBuilder sb = new StringBuilder();
     private static ArrayList<Integer> result = new ArrayList<>();
     private static boolean[][][] visit;
     private static int[] maxVolume = new int[3];
     private static int[] currentVolume = new int[3];
 
+    public static void main(String[] args) throws IOException {
+        input();
+        process();
+        output();
+    }
+
     public static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] temp = br.readLine().split(" ");
+        StringTokenizer st;
 
-        for (int i = A; i <= C; i++) {       // 물통 A,B,C 생성 후 bottles에 추가
-            maxVolume[i] = Integer.parseInt(temp[i]);
-        }
+        st = new StringTokenizer(br.readLine());
+        maxVolume[A] = Integer.parseInt(st.nextToken());
+        maxVolume[B] = Integer.parseInt(st.nextToken());
+        maxVolume[C] = Integer.parseInt(st.nextToken());
 
         currentVolume[C] = maxVolume[C];
 
         visit = new boolean[maxVolume[A] + 1][maxVolume[B] + 1][maxVolume[C] + 1];
+    }
+
+    private static void process() {
+        bfs(currentVolume);
+        Collections.sort(result);
     }
 
     public static void bfs(int[] status) {
@@ -36,51 +47,48 @@ public class Main_2251 {
         visit[status[A]][status[B]][status[C]] = true;
 
         while (!queue.isEmpty()) {
-            int[] checkedStatus = queue.poll();
+            int[] currentStatus = queue.poll();
 
-            if(checkedStatus[A] == 0) {
-                result.add(checkedStatus[C]);
+            if (currentStatus[A] == 0) {
+                result.add(currentStatus[C]);
             }
 
-            for (int from = A; from <= C; from++) {
-                if (checkedStatus[from] == 0) {
+            for (int start = A; start <= C; start++) {
+                if (currentStatus[start] == 0) {
                     continue;
                 }
 
-                for (int to = A; to <= C; to++) {
-                    int[] temp = {checkedStatus[A], checkedStatus[B], checkedStatus[C]};
+                for (int destination = A; destination <= C; destination++) {
+                    int[] nextStatus = currentStatus.clone();
 
-                    if (from == to) {
+                    if (start == destination) {
                         continue;
                     }
 
-                    if (temp[from] + temp[to] > maxVolume[to]) {
-                        temp[from] -= maxVolume[to] - temp[to];
-                        temp[to] = maxVolume[to];
+                    if (overMaxVolume(start, destination, nextStatus)) {
+                        nextStatus[start] -= maxVolume[destination] - nextStatus[destination];
+                        nextStatus[destination] = maxVolume[destination];
                     } else {
-                        temp[to] += temp[from];
-                        temp[from] = 0;
+                        nextStatus[destination] += nextStatus[start];
+                        nextStatus[start] = 0;
                     }
 
-                    if (visit[temp[A]][temp[B]][temp[C]]) {
+                    if (visit[nextStatus[A]][nextStatus[B]][nextStatus[C]]) {
                         continue;
                     }
 
-                    queue.add(temp);
-                    visit[temp[A]][temp[B]][temp[C]] = true;
+                    queue.add(nextStatus);
+                    visit[nextStatus[A]][nextStatus[B]][nextStatus[C]] = true;
                 }
             }
         }
-
-        Collections.sort(result);
     }
 
-    public static void main(String[] args) throws IOException {
-        input();
-        bfs(currentVolume);
+    private static boolean overMaxVolume(int start, int destination, int[] nextStatus) {
+        return nextStatus[start] + nextStatus[destination] > maxVolume[destination];
+    }
 
-        for (int i = 0; i <result.size(); i++) {
-            System.out.print(result.get(i) + " ");
-        }
+    private static void output() {
+        result.forEach(n -> System.out.print(n + " "));
     }
 }

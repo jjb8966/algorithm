@@ -8,16 +8,16 @@ import java.util.*;
 /**
  * 인접 리스트 구현 방식
  * ArrayList<ArrayList<Integer>> adjacencyList = new ArrayList<>();
- *
- *  for (int i = 0; i <= numberOfVertex; i++) {     // 인덱스 : 1 ~ numberOfVertex
- *      adjacencyList.add(new ArrayList<>());
- *  }
+ * <p>
+ * for (int i = 0; i <= numberOfVertex; i++) {     // 인덱스 : 1 ~ numberOfVertex
+ * adjacencyList.add(new ArrayList<>());
+ * }
  */
 public class Main_1260 {
 
     private static int numberOfVertex;
     private static int numberOfEdge;
-    private static int startNumber;
+    private static int startVertex;
     private static int[] visited;
     private static ArrayList<Integer>[] adjacencyList;
     private static StringBuilder sb = new StringBuilder();
@@ -25,12 +25,10 @@ public class Main_1260 {
     private static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int a;
-        int b;
 
         numberOfVertex = Integer.parseInt(st.nextToken());
         numberOfEdge = Integer.parseInt(st.nextToken());
-        startNumber = Integer.parseInt(st.nextToken());
+        startVertex = Integer.parseInt(st.nextToken());
 
         adjacencyList = new ArrayList[numberOfVertex + 1]; // index : 1 ~ numberOfVertex
         visited = new int[numberOfVertex + 1];  // index : 1 ~ numberOfVertex
@@ -42,8 +40,8 @@ public class Main_1260 {
         for (int i = 1; i <= numberOfEdge; i++) {
             st = new StringTokenizer(br.readLine());
 
-            a = Integer.parseInt(st.nextToken());
-            b = Integer.parseInt(st.nextToken());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
 
             adjacencyList[a].add(b);
             adjacencyList[b].add(a);
@@ -52,9 +50,9 @@ public class Main_1260 {
 
     private static void process() {
         sort();
-        dfs(startNumber);
+        dfs(startVertex);
         reset();
-        bfs(startNumber);
+        bfs(startVertex);
     }
 
     private static void sort() {
@@ -68,34 +66,33 @@ public class Main_1260 {
 
         sb.append(number).append(' ');
 
-        for (Integer reachableVertex : adjacencyList[number]) {
-            if (visited[reachableVertex] == 1) {
+        for (Integer nextVertex : adjacencyList[number]) {
+            if (visited[nextVertex] == 1) {
                 continue;
             }
 
-            dfs(reachableVertex);
+            dfs(nextVertex);
         }
     }
 
     private static void bfs(int startNumber) {
         Queue<Integer> queue = new LinkedList<>();
-        int pollVertex;
 
         queue.add(startNumber);
         visited[startNumber]++;
 
         while (!queue.isEmpty()) {
-            pollVertex = queue.poll();
+            int pollVertex = queue.poll();
 
             sb.append(pollVertex).append(' ');
 
-            for (Integer reachableVertex : adjacencyList[pollVertex]) {
-                if (visited[reachableVertex] == 1) {
+            for (Integer nextVertex : adjacencyList[pollVertex]) {
+                if (visited[nextVertex] == 1) {
                     continue;
                 }
 
-                queue.add(reachableVertex);
-                visited[reachableVertex]++;
+                queue.add(nextVertex);
+                visited[nextVertex]++;
             }
         }
     }
