@@ -5,38 +5,38 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.StringTokenizer;
 
-/**
- * BFS 로 최단거리 구하는 문제
- * DFS 는 불가!!
- */
 public class Main_2178 {
 
     private static int height;
     private static int width;
     private static int[][] map;
-    private static int[][] minDistance;
-    private static int[][] direction = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    private static int[][] minimumDistance;
+    private static int[][] direction = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
     private static boolean[][] visited;
+
+    public static void main(String[] args) throws IOException {
+        input();
+        process();
+        output();
+    }
 
     private static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        String[] temp = br.readLine().split(" ");
 
-        height = Integer.parseInt(st.nextToken());
-        width = Integer.parseInt(st.nextToken());
+        height = Integer.parseInt(temp[0]);
+        width = Integer.parseInt(temp[1]);
 
-        map = new int[height + 1][width + 1]; // index : 1 ~ value
-        minDistance = new int[height + 1][width + 1];
-        visited = new boolean[height + 1][width + 1];
+        map = new int[width + 1][height + 1];
+        minimumDistance = new int[width + 1][height + 1];
+        visited = new boolean[width + 1][height + 1];
 
-        for (int i = 1; i <= height; i++) {
-            st = new StringTokenizer(br.readLine());
-            String[] temp = st.nextToken().split("");
+        for (int y = 1; y <= height; y++) {
+            temp = br.readLine().split("");
 
-            for (int j = 1; j <= width; j++) {
-                map[i][j] = Integer.parseInt(temp[j - 1]);
+            for (int x = 1; x <= width; x++) {
+                map[x][y] = Integer.parseInt(temp[x - 1]);
             }
         }
     }
@@ -50,20 +50,17 @@ public class Main_2178 {
 
         queue.add(startX);
         queue.add(startY);
-        visited[startX][startY] = true;
-        minDistance[startX][startY] = 1;    // 1,1 (자기 자신)까지의 거리 = 1
+        minimumDistance[startX][startY] = 1;
 
         while (!queue.isEmpty()) {
             int x = queue.poll();
             int y = queue.poll();
-            int newX;
-            int newY;
 
-            for (int i = 0; i < 4; i++) {
-                newX = x + direction[i][0];
-                newY = y + direction[i][1];
+            for (int dir = 0; dir < 4; dir++) {
+                int newX = x + direction[dir][0];
+                int newY = y + direction[dir][1];
 
-                if (newX < 1 || newY < 1 || newX > height || newY > width) {
+                if (newX <= 0 || newY <= 0 || newX > width || newY > height) {
                     continue;
                 }
 
@@ -78,18 +75,13 @@ public class Main_2178 {
                 queue.add(newX);
                 queue.add(newY);
                 visited[newX][newY] = true;
-                minDistance[newX][newY] = minDistance[x][y] + 1;
+                minimumDistance[newX][newY] = minimumDistance[x][y] + 1;
             }
         }
     }
 
     private static void output() {
-        System.out.println(minDistance[height][width]);
+        System.out.println(minimumDistance[width][height]);
     }
 
-    public static void main(String[] args) throws IOException {
-        input();
-        process();
-        output();
-    }
 }

@@ -5,85 +5,95 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.StringTokenizer;
 
 public class Main_3055 {
 
     private static int height;
     private static int width;
-    private static int[][] startAndDestination = new int[2][2];
-    private static char[][] map;
-    private static int[][] waterDistance;
-    private static int[][] hedgehogDistance;
     private static int[][] direction = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    private static int[][] waterMinDistance;
+    private static int[][] hedgehogMinDistance;
+    private static char[][] map;
     private static boolean[][] visited;
-    private static Queue<Integer> waterQueue = new LinkedList<>();
+    private static Coordinate start;
+    private static Coordinate destination;
+    private static Queue<Coordinate> waterQueue = new LinkedList<>();
+    private static StringBuilder sb = new StringBuilder();
+
+    static class Coordinate {
+        int x;
+        int y;
+
+        public Coordinate(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        input();
+        process();
+        output();
+    }
 
     private static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        String[] temp = br.readLine().split(" ");
 
-        height = Integer.parseInt(st.nextToken());
-        width = Integer.parseInt(st.nextToken());
-        map = new char[height][width];
-        waterDistance = new int[height][width];
-        hedgehogDistance = new int[height][width];
-        visited = new boolean[height][width];
+        height = Integer.parseInt(temp[0]);
+        width = Integer.parseInt(temp[1]);
 
-        for (int x = 0; x < height; x++) {
-            String temp = br.readLine();
+        map = new char[width + 1][height + 1];
+        waterMinDistance = new int[width + 1][height + 1];
+        hedgehogMinDistance = new int[width + 1][height + 1];
+        visited = new boolean[width + 1][height + 1];
 
-            for (int y = 0; y < width; y++) {
-                map[x][y] = temp.charAt(y);
+        for (int y = 1; y <= height; y++) {
+            temp = br.readLine().split("");
 
-                if (map[x][y] == '*') {
-                    waterQueue.add(x);
-                    waterQueue.add(y);
-                    visited[x][y] = true;
-                    waterDistance[x][y] = 0;
-                }
+            for (int x = 1; x <= width; x++) {
+                map[x][y] = temp[x - 1].charAt(0);
 
                 if (map[x][y] == 'S') {
-                    startAndDestination[0][0] = x;
-                    startAndDestination[0][1] = y;
+                    start = new Coordinate(x, y);
                 }
 
                 if (map[x][y] == 'D') {
-                    startAndDestination[1][0] = x;
-                    startAndDestination[1][1] = y;
+                    destination = new Coordinate(x, y);
+                }
+
+                if (map[x][y] == '*') {
+                    waterQueue.add(new Coordinate(x, y));
+                    waterMinDistance[x][y] = 0;
+                    visited[x][y] = true;
                 }
             }
         }
+
     }
 
     private static void process() {
-        waterBfs();
-        resetVisit();
-        hedgehogBfs();
-    }
+        bfsWater();
+        bfsHedgehog();
 
-    private static void resetVisit() {
-//        visited = new boolean[height][width];
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                visited[i][j] = false;
-            }
+        if (hedgehogMinDistance[destination.x][destination.y] == 0) {
+            sb.append("KAKTUS");
+        } else {
+            sb.append(hedgehogMinDistance[destination.x][destination.y]);
         }
     }
 
-    private static void waterBfs() {
-        // 데이터 입력 시 물의 좌표 큐에 넣고 visit check 함
+    private static void bfsWater() {
         while (!waterQueue.isEmpty()) {
-            int x = waterQueue.poll();
-            int y = waterQueue.poll();
-            int newX;
-            int newY;
+            Coordinate water = waterQueue.poll();
+            int x = water.x;
+            int y = water.y;
 
-            for (int i = 0; i < 4; i++) {
-                newX = x + direction[i][0];
-                newY = y + direction[i][1];
+            for (int dir = 0; dir < 4; dir++) {
+                int newX = x + direction[dir][0];
+                int newY = y + direction[dir][1];
 
-                if (newX < 0 || newY < 0 || newX > height - 1 || newY > width - 1) {
+                if (newX <= 0 || newY <= 0 || newX > width || newY > height) {
                     continue;
                 }
 
@@ -91,39 +101,35 @@ public class Main_3055 {
                     continue;
                 }
 
-                if (map[newX][newY] == 'X' || map[newX][newY] == 'D') {
+                if (map[newX][newY] != '.') {
                     continue;
                 }
 
-                waterQueue.add(newX);
-                waterQueue.add(newY);
+                waterMinDistance[newX][newY] = waterMinDistance[x][y] + 1;
                 visited[newX][newY] = true;
-                waterDistance[newX][newY] = waterDistance[x][y] + 1;
+                waterQueue.add(new Coordinate(newX, newY));
             }
         }
     }
 
-    private static void hedgehogBfs() {
-        Queue<Integer> queue = new LinkedList<>();
-        int startX = startAndDestination[0][0];
-        int startY = startAndDestination[0][1];
+    private static void bfsHedgehog() {
+        Queue<Coordinate> queue = new LinkedList<>();
+        visited = new boolean[width + 1][height + 1];
 
-        queue.add(startX);
-        queue.add(startY);
-        visited[startX][startY] = true;
-        hedgehogDistance[startX][startY] = 0;
+        queue.add(start);
+        hedgehogMinDistance[start.x][start.y] = 0;
+        visited[start.x][start.y] = true;
 
         while (!queue.isEmpty()) {
-            int x = queue.poll();
-            int y = queue.poll();
-            int newX;
-            int newY;
+            Coordinate hedgehog = queue.poll();
+            int x = hedgehog.x;
+            int y = hedgehog.y;
 
-            for (int i = 0; i < 4; i++) {
-                newX = x + direction[i][0];
-                newY = y + direction[i][1];
+            for (int dir = 0; dir < 4; dir++) {
+                int newX = x + direction[dir][0];
+                int newY = y + direction[dir][1];
 
-                if (newX < 0 || newY < 0 || newX > height - 1 || newY > width - 1) {
+                if (newX <= 0 || newY <= 0 || newX > width || newY > height) {
                     continue;
                 }
 
@@ -135,36 +141,19 @@ public class Main_3055 {
                     continue;
                 }
 
-                hedgehogDistance[newX][newY] = hedgehogDistance[x][y] + 1;
-
-                // 지도에 물이 없는 경우 waterDistance 는 모두 0임
-                if (waterDistance[newX][newY] != 0 && hedgehogDistance[newX][newY] >= waterDistance[newX][newY]) {
-                    hedgehogDistance[newX][newY] = 0;
+                if (waterMinDistance[newX][newY] != 0 && (hedgehogMinDistance[x][y] + 1 >= waterMinDistance[newX][newY])) {
                     continue;
                 }
 
-                queue.add(newX);
-                queue.add(newY);
+                hedgehogMinDistance[newX][newY] = hedgehogMinDistance[x][y] + 1;
                 visited[newX][newY] = true;
+                queue.add(new Coordinate(newX, newY));
             }
         }
     }
 
     private static void output() {
-        int destinationX = startAndDestination[1][0];
-        int destinationY = startAndDestination[1][1];
-        int result = hedgehogDistance[destinationX][destinationY];
-
-        if (result == 0) {
-            System.out.println("KAKTUS");
-        } else {
-            System.out.println(result);
-        }
+        System.out.println(sb);
     }
 
-    public static void main(String[] args) throws IOException {
-        input();
-        process();
-        output();
-    }
 }
