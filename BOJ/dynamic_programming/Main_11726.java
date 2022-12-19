@@ -5,31 +5,33 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Main_11726 {
-    private static int width;
-    private static int[] dynamicSolution;
 
-    private static void input() throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        width = Integer.parseInt(br.readLine());
-
-        dynamicSolution = new int[1001];
-    }
-
-    private static void process() {
-        // 초기값
-        dynamicSolution[1] = 1;
-        dynamicSolution[2] = 2;
-
-        //점화식
-        for (int i = 3; i <= width; i++) {
-            dynamicSolution[i] = (dynamicSolution[i - 1] + dynamicSolution[i - 2]) % 10007;
-        }
-        System.out.println(dynamicSolution[width]);
-    }
+    private static int targetNumber;
+    private static long[] result = new long[1000 + 1];
 
     public static void main(String[] args) throws IOException {
         input();
         process();
+        output();
     }
+
+    private static void input() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        targetNumber = Integer.parseInt(br.readLine());
+    }
+
+    private static void process() {
+        result[1] = 1;
+        result[2] = 2;
+
+        for (int index = 3; index <= targetNumber; index++) {
+            result[index] = (result[index - 1] + result[index - 2]) % 10_007;
+        }
+    }
+
+    private static void output() {
+        System.out.println(result[targetNumber]);
+    }
+
 }
