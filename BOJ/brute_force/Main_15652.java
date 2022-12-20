@@ -5,13 +5,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-//중복o, 순서x -> O(N^M)보단 작음
 public class Main_15652 {
 
-    private static StringBuilder sb = new StringBuilder();
-    private static int maxNumber;
-    private static int maxDigit;
+    private static int N;
+    private static int M;
     private static int[] result;
+    private static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
         input();
@@ -21,12 +20,13 @@ public class Main_15652 {
 
     private static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        StringTokenizer st;
 
-        maxNumber = Integer.parseInt(st.nextToken());
-        maxDigit = Integer.parseInt(st.nextToken());
+        st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
 
-        result = new int[maxDigit + 1];     // 1 ~ maxDigit
+        result = new int[M + 1];
     }
 
     private static void process() {
@@ -34,23 +34,26 @@ public class Main_15652 {
     }
 
     private static void bruteForce(int digit) {
-        if (digit == maxDigit + 1) {
-            for (int i = 1; i <= maxDigit; i++) {
-                sb.append(result[i]).append(" ");
+        if (digit == M + 1) {
+            for (int index = 1; index <= M; index++) {
+                sb.append(result[index]).append(" ");
             }
 
-            sb.append("\n");
-        } else {
-            for (int currentNumber = 1; currentNumber <= maxNumber; currentNumber++) {
-                if (currentNumber < result[digit - 1]) {
-                    continue;
-                }
+            sb.append('\n');
 
-                result[digit] = currentNumber;
-
-                bruteForce(digit + 1);
-            }
+            return;
         }
+
+        for (int candidate = 1; candidate <= N; candidate++) {
+            if (result[digit - 1] > candidate) {
+                continue;
+            }
+
+            result[digit] = candidate;
+
+            bruteForce(digit + 1);
+        }
+
     }
 
     private static void output() {

@@ -5,14 +5,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-// 중복x, 순서o -> 시간복잡도 : O(N P M) = N! / (N-M)!
 public class Main_15649 {
 
-    private static StringBuilder sb = new StringBuilder();
-    private static int maxNumber;
-    private static int maxDigit;
+    private static int N;
+    private static int M;
     private static int[] result;
-    private static boolean[] used;
+    private static boolean[] visited;
+    private static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
         input();
@@ -22,13 +21,14 @@ public class Main_15649 {
 
     private static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        StringTokenizer st;
 
-        maxNumber = Integer.parseInt(st.nextToken());
-        maxDigit = Integer.parseInt(st.nextToken());
+        st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
 
-        result = new int[maxDigit + 1];     // 1 ~ maxDigit
-        used = new boolean[maxNumber + 1];
+        result = new int[M + 1];
+        visited = new boolean[N + 1];
     }
 
     private static void process() {
@@ -36,25 +36,27 @@ public class Main_15649 {
     }
 
     private static void bruteForce(int digit) {
-        if (digit == maxDigit + 1) {
-            for (int i = 1; i <= maxDigit; i++) {
-                sb.append(result[i]).append(" ");
+        if (digit == M + 1) {
+            for (int index = 1; index <= M; index++) {
+                sb.append(result[index]).append(" ");
             }
 
-            sb.append("\n");
-        } else {
-            for (int currentNumber = 1; currentNumber <= maxNumber; currentNumber++) {
-                if (used[currentNumber]) {
-                    continue;
-                }
+            sb.append('\n');
 
-                result[digit] = currentNumber;
-                used[currentNumber] = true;
+            return;
+        }
 
-                bruteForce(digit + 1);
-
-                used[currentNumber] = false;
+        for (int candidate = 1; candidate <= N; candidate++) {
+            if (visited[candidate]) {
+                continue;
             }
+
+            result[digit] = candidate;
+            visited[candidate] = true;
+
+            bruteForce(digit + 1);
+
+            visited[candidate] = false;
         }
     }
 
