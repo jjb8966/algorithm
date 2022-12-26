@@ -6,11 +6,10 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
-public class Main_7795 {
+public class Main_7796_while {
 
     private static int numberOfA;
     private static int numberOfB;
-    private static int tempResult;
     private static int result;
     private static int[] sequenceA;
     private static int[] sequenceB;
@@ -54,31 +53,31 @@ public class Main_7795 {
         result = 0;
 
         for (int index = 1; index <= numberOfA; index++) {
-            tempResult = 0;
-            binarySearch(1, numberOfB, sequenceA[index]);
+            result += binarySearch(sequenceA[index]);
         }
 
         sb.append(result).append('\n');
     }
 
-    private static void binarySearch(int start, int end, int target) {
-        if (start > end) {
-            result += tempResult;
-            return;
+    private static int binarySearch(int target) {
+        int start = 1;
+        int end = numberOfB;
+        int result = 0;
+
+        while (start <= end) {
+            int mid = (start + end) / 2;
+
+            if (sequenceB[mid] < target) {
+                result = mid;
+                start = mid + 1;
+            }
+
+            if (sequenceB[mid] >= target) {
+                end = mid - 1;
+            }
         }
 
-        int mid = (start + end) / 2;
-
-        if (sequenceB[mid] < target) {
-            tempResult = mid;
-            start = mid + 1;
-        }
-
-        if (sequenceB[mid] >= target) {
-            end = mid - 1;
-        }
-
-        binarySearch(start, end, target);
+        return result;
     }
 
     private static void output() {

@@ -9,9 +9,15 @@ import java.util.StringTokenizer;
 public class Main_2470 {
 
     private static int numberOfSolution;
+    private static int bestSum = Integer.MAX_VALUE;
     private static int[] solutions;
+    private static int[] result = new int[2];
 
-    private static int[] resultSolutions = new int[2];
+    public static void main(String[] args) throws IOException {
+        input();
+        process();
+        output();
+    }
 
     private static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -30,41 +36,41 @@ public class Main_2470 {
     private static void process() {
         Arrays.sort(solutions);
 
-        int bestSum = Integer.MAX_VALUE;
+        for (int index = 0; index < numberOfSolution; index++) {
+            int candidate = binarySearch(index + 1, -solutions[index]);
 
-        for (int left = 0; left < numberOfSolution - 1; left++) {
-            int candidate = lowerBound(left + 1, -solutions[left]);
+            updateResult(index, candidate - 1);
+            updateResult(index, candidate);
+        }
 
-            bestSum = getBestSum(bestSum, left, candidate - 1);
-            bestSum = getBestSum(bestSum, left, candidate);
+        Arrays.sort(result);
+    }
+
+    private static void updateResult(int index, int candidate) {
+        if (index >= candidate || candidate >= numberOfSolution) {
+            return;
+        }
+
+        if (Math.abs(solutions[index] + solutions[candidate]) < bestSum) {
+            bestSum = Math.abs(solutions[index] + solutions[candidate]);
+            result[0] = solutions[index];
+            result[1] = solutions[candidate];
         }
     }
 
-    private static int getBestSum(int bestSum, int left, int candidate) {
-        if (left < candidate && candidate < numberOfSolution) {
-            int abs = Math.abs(solutions[left] + solutions[candidate]);
-
-            if (abs < bestSum) {
-                bestSum = abs;
-                resultSolutions[0] = solutions[left];
-                resultSolutions[1] = solutions[candidate];
-            }
-        }
-        return bestSum;
-    }
-
-    private static int lowerBound(int start, int target) {
-        int result = numberOfSolution;
+    private static int binarySearch(int start, int target) {
         int end = numberOfSolution - 1;
-        int mid;
+        int result = numberOfSolution;
 
         while (start <= end) {
-            mid = (start + end) / 2;
+            int mid = (start + end) / 2;
 
             if (solutions[mid] >= target) {
                 result = mid;
                 end = mid - 1;
-            } else {
+            }
+
+            if (solutions[mid] < target) {
                 start = mid + 1;
             }
         }
@@ -73,12 +79,7 @@ public class Main_2470 {
     }
 
     private static void output() {
-        System.out.println(resultSolutions[0] + " " + resultSolutions[1]);
+        System.out.println(result[0] + " " + result[1]);
     }
 
-    public static void main(String[] args) throws IOException {
-        input();
-        process();
-        output();
-    }
 }
