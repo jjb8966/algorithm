@@ -47,7 +47,11 @@ public class Main_2470 {
     }
 
     private static void updateResult(int index, int candidate) {
-        if (index >= candidate || candidate >= numberOfSolution) {
+        if (index >= candidate) {
+            return;
+        }
+
+        if (candidate >= numberOfSolution) {
             return;
         }
 

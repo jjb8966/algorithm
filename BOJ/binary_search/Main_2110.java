@@ -1,83 +1,80 @@
 package binary_search;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
-/**
- * 문제 : C개의 공유기를 N개의 집에 적당히 설치할 때 가장 인접한 두 공유기 사이가 최대인 거리 distance를 찾아라.
- * 뒤집은 문제 : 가장 인접한 두 공유기 사이의 거리를 distance로 했을 때 C개의 공유기를 N개의 집에 설치할 수 있는가? Y / N
- * 정답 : 가장 마지막으로 Y가 나오는 거리 distance
- */
 public class Main_2110 {
-    private static Scanner sc = new Scanner(System.in);
+
     private static int numberOfHouse;
-    private static int numberOfRouter;            // N : 집의 개수 (2~2만), C : 공유기의 개수 (2~N)
-    private static int[] coordinates;    // coordinate : 좌표 (0~10억)
+    private static int numberOfRouter;
+    private static int maxDistance;
+    private static int[] houseCoordinate;
 
-    public static void input() {
-        numberOfHouse = sc.nextInt();
-        numberOfRouter = sc.nextInt();
-
-        coordinates = new int[numberOfHouse];
-
-        for (int i = 0; i < numberOfHouse; i++) {
-            coordinates[i] = sc.nextInt();
-        }
-
-        Arrays.sort(coordinates);
+    public static void main(String[] args) throws IOException {
+        input();
+        process();
+        output();
     }
 
-    // 풀이의 핵심이 되는 메소드. 답이 되는 조건을 잘 파악하고 작성할 것.
-    // 가장 인접한 두 공유기 사이의 거리를 distance로 했을 때 C개의 공유기를 N개의 집에 설치할 수 있는가? Y / N
-    public static boolean determinate(int distance) {
-        int numberOfRoutersCanBeInstalled = 1;     //가장 왼쪽 집은 무조건 공유기를 설치함
-        int currentCoordinate;
-        int compareCoordinate;
-        int gap;
+    private static void input() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
 
-        currentCoordinate = coordinates[0];
+        st = new StringTokenizer(br.readLine());
+        numberOfHouse = Integer.parseInt(st.nextToken());
+        numberOfRouter = Integer.parseInt(st.nextToken());
 
-        for (int i = 1; i < numberOfHouse; i++) {
-            compareCoordinate = coordinates[i];
-            gap = compareCoordinate - currentCoordinate;        // 오름차순으로 정렬했기 때문에 가능한 수식
+        houseCoordinate = new int[numberOfHouse + 1];
+
+        for (int i = 1; i <= numberOfHouse; i++) {
+            houseCoordinate[i] = Integer.parseInt(br.readLine());
+        }
+    }
+
+    private static void process() {
+        binarySearch();
+    }
+
+    private static void binarySearch() {
+        int start = 0;
+        int end = 1_000_000_000;
+
+        Arrays.sort(houseCoordinate);
+
+        while (start <= end) {
+            int mid = (start + end) / 2;
+
+            if (isAvailable(mid)) {
+                maxDistance = mid;
+                start = mid + 1;
+            } else {
+                end = mid - 1;
+            }
+        }
+    }
+
+    private static boolean isAvailable(int distance) {
+        int countRouter = 1;
+        int leftRouterCoordinate = houseCoordinate[1];
+
+        for (int house = 2; house <= numberOfHouse; house++) {
+            int rightRouterCoordinate = houseCoordinate[house];
+            int gap = rightRouterCoordinate - leftRouterCoordinate;
 
             if (gap >= distance) {
-                numberOfRoutersCanBeInstalled++;
-                currentCoordinate = compareCoordinate;
-            }
-
-            if (numberOfRoutersCanBeInstalled == numberOfRouter) {
-                return true;
+                countRouter++;
+                leftRouterCoordinate = rightRouterCoordinate;
             }
         }
 
-        return false;
+        return countRouter >= numberOfRouter;
     }
 
-    // Parametric Search에서 반복적으로 사용되는 메소드 -> 암기!!!!!!!!!!!
-    // left, right만 문제에 맞게 작성해주면 됨
-    public static void parametricSearch() {
-        int left = 0;
-        int right = 1000000000;
-        int result = 0;
-
-        while (left <= right) {
-            int mid = (left + right) / 2;
-
-            if (determinate(mid)) {
-                result = mid;
-                left = mid + 1;
-            } else {
-                right = mid - 1;
-            }
-        }
-
-        System.out.println(result);
+    private static void output() {
+        System.out.println(maxDistance);
     }
 
-    public static void main(String[] args) {
-        input();
-        parametricSearch();
-    }
 }
-
