@@ -12,16 +12,20 @@ public class Main_11725 {
     private static int[] parent;
     private static ArrayList<Integer>[] adjacencyList;
 
+    public static void main(String[] args) throws IOException {
+        input();
+        process();
+        output();
+    }
+
     private static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
-        int vertex1;
-        int vertex2;
 
         numberOfNode = Integer.parseInt(br.readLine());
 
-        adjacencyList = new ArrayList[numberOfNode + 1];
         parent = new int[numberOfNode + 1];
+        adjacencyList = new ArrayList[numberOfNode + 1];
 
         for (int i = 1; i <= numberOfNode; i++) {
             adjacencyList[i] = new ArrayList<>();
@@ -29,12 +33,11 @@ public class Main_11725 {
 
         for (int i = 0; i < numberOfNode - 1; i++) {
             st = new StringTokenizer(br.readLine());
+            int node1 = Integer.parseInt(st.nextToken());
+            int node2 = Integer.parseInt(st.nextToken());
 
-            vertex1 = Integer.parseInt(st.nextToken());
-            vertex2 = Integer.parseInt(st.nextToken());
-
-            adjacencyList[vertex1].add(vertex2);
-            adjacencyList[vertex2].add(vertex1);
+            adjacencyList[node1].add(node2);
+            adjacencyList[node2].add(node1);
         }
     }
 
@@ -42,27 +45,22 @@ public class Main_11725 {
         dfs(1, -1);
     }
 
-    private static void dfs(int node, int myParent) {
-        parent[node] = myParent;
+    private static void dfs(int node, int parentNode) {
+        parent[node] = parentNode;
 
-        for (Integer child : adjacencyList[node]) {
-            if (child == myParent) {
+        for (Integer childNode : adjacencyList[node]) {
+            if (childNode == parentNode) {
                 continue;
             }
 
-            dfs(child, node);
+            dfs(childNode, node);
         }
     }
 
     private static void output() {
-        for (int i = 2; i <= numberOfNode; i++) {
-            System.out.println(parent[i]);
+        for (int index = 2; index <= numberOfNode; index++) {
+            System.out.println(parent[index]);
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        input();
-        process();
-        output();
-    }
 }

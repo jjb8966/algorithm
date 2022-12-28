@@ -9,10 +9,17 @@ import java.util.StringTokenizer;
 public class Main_1068 {
 
     private static int numberOfNode;
-    private static int eraseNode;
+    private static int removedNode;
     private static int rootNode;
-    private static int[] countLeafNode;
+    private static int countLeafNode;
     private static int[] parent;
+    private static ArrayList<Integer>[] adjacencyList;
+
+    public static void main(String[] args) throws IOException {
+        input();
+        process();
+        output();
+    }
 
     private static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -21,70 +28,61 @@ public class Main_1068 {
         numberOfNode = Integer.parseInt(br.readLine());
 
         parent = new int[numberOfNode];
-        countLeafNode = new int[numberOfNode];
-
-        st = new StringTokenizer(br.readLine());
+        adjacencyList = new ArrayList[numberOfNode];
 
         for (int i = 0; i < numberOfNode; i++) {
-            parent[i] = Integer.parseInt(st.nextToken());
+            adjacencyList[i] = new ArrayList<>();
+        }
 
-            if (parent[i] == -1) {
-                rootNode = i;
+        st = new StringTokenizer(br.readLine());
+        for (int node = 0; node < numberOfNode; node++) {
+            int parentNode = Integer.parseInt(st.nextToken());
+
+            if (parentNode == -1) {
+                rootNode = node;
+            }
+
+            parent[node] = parentNode;
+
+            if (parentNode != -1) {
+                adjacencyList[parentNode].add(node);
             }
         }
 
-        eraseNode = Integer.parseInt(br.readLine());
+        removedNode = Integer.parseInt(br.readLine());
+
     }
 
     private static void process() {
-        // 지우려는 노드가 루트 노드인 경우 -> 0을 출력하고 프로그램 종료
-        if (rootNode == eraseNode) {
-            System.out.println(0);
-            System.exit(0);
-        }
-
-        removeNode();
-        dfs(rootNode);
-    }
-
-    private static void removeNode() {
-        parent[eraseNode] = -1;
-    }
-
-    private static void dfs(int node) {
-        ArrayList<Integer> myChildren = new ArrayList<>();
-
-        // 자식 노드들을 먼저 구함
-        for (int candidate = 0; candidate < numberOfNode; candidate++) {
-            if (candidate != node && parent[candidate] == node) {
-                myChildren.add(candidate);
-            }
-        }
-
-        // 자식이 없다면 리프노드
-        if (myChildren.size() == 0) {
-            countLeafNode[node] = 1;
+        if (removedNode == rootNode) {
             return;
         }
 
-        // 모든 자식들에 대해 dfs
-        for (Integer child : myChildren) {
-            dfs(child);     // 자식에 대한 dfs 가 모두 끝나면 자식의 countLeafNode를 알 수 있음
+        removeNode();
+        findLeafNode(rootNode);
+    }
+
+    private static void removeNode() {
+        int parentNode = parent[removedNode];
+
+        adjacencyList[parentNode].remove((Integer) removedNode);
+    }
+
+    private static void findLeafNode(int node) {
+        boolean hasChildren = false;
+
+        for (Integer childNode : adjacencyList[node]) {
+            hasChildren = true;
+            findLeafNode(childNode);
         }
 
-        while (!myChildren.isEmpty()) {
-            // 리프 노드 갯수 = 자식들의 리프 노드 갯수 합
-            countLeafNode[node] += countLeafNode[myChildren.remove(0)];
+        if (!hasChildren) {
+            countLeafNode++;
         }
     }
 
     private static void output() {
-        System.out.println(countLeafNode[rootNode]);
+        System.out.println(countLeafNode);
     }
 
-    public static void main(String[] args) throws IOException {
-        input();
-        process();
-        output();
-    }
 }
