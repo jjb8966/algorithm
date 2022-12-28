@@ -8,34 +8,46 @@ import java.util.StringTokenizer;
 public class Main_13144 {
 
     private static int lengthOfSequence;
-    // --> result 최댓값 : N + (N-1) + ... + 2 + 1 = 약 50억 -> 결과는 long 변수로 담아야함
-    private static long result;
     private static int[] sequence;
+    private static long result;
+
+    public static void main(String[] args) throws IOException {
+        input();
+        process();
+        output();
+    }
 
     private static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
 
         lengthOfSequence = Integer.parseInt(br.readLine());
-        sequence = new int[lengthOfSequence + 1];   // right 가 수열의 (마지막 인덱스 + 1)을 가리킬 수 있도록
 
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        sequence = new int[lengthOfSequence];
+
+        st = new StringTokenizer(br.readLine());
         for (int i = 0; i < lengthOfSequence; i++) {
             sequence[i] = Integer.parseInt(st.nextToken());
         }
     }
 
     private static void process() {
+        twoPointer();
+    }
+
+    private static void twoPointer() {
         int right = 0;
-        int[] count = new int[100001];
+        boolean[] used = new boolean[100_000 + 1];
 
         for (int left = 0; left < lengthOfSequence; left++) {
-            while (count[sequence[right]] != 1 && right < lengthOfSequence) {
-                count[sequence[right]]++;
+            while (right < lengthOfSequence && !used[sequence[right]]) {
+                used[sequence[right]] = true;
                 right++;
             }
 
             result += right - left;
-            count[sequence[left]]--;
+
+            used[sequence[left]] = false;
         }
     }
 
@@ -43,9 +55,4 @@ public class Main_13144 {
         System.out.println(result);
     }
 
-    public static void main(String[] args) throws IOException {
-        input();
-        process();
-        output();
-    }
 }

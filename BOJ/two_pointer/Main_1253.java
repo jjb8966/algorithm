@@ -9,17 +9,24 @@ import java.util.StringTokenizer;
 public class Main_1253 {
 
     private static int lengthOfSequence;
-    private static int numberOfGoodNumber;
+    private static int result;
     private static int[] sequence;
+
+    public static void main(String[] args) throws IOException {
+        input();
+        process();
+        output();
+    }
 
     private static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
 
         lengthOfSequence = Integer.parseInt(br.readLine());
 
         sequence = new int[lengthOfSequence];
 
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        st = new StringTokenizer(br.readLine());
         for (int i = 0; i < lengthOfSequence; i++) {
             sequence[i] = Integer.parseInt(st.nextToken());
         }
@@ -28,54 +35,50 @@ public class Main_1253 {
     private static void process() {
         Arrays.sort(sequence);
 
-        for (int candidate = 0; candidate < lengthOfSequence; candidate++) {
-            // 다른 위치의 같은 숫자가 있을 수 있으므로 sequence 의 인덱스 값을 넘겨야 함
-            if (isGoodNumber(candidate)) {
-                numberOfGoodNumber++;
+        for (int index = 0; index < lengthOfSequence; index++) {
+            if (isGoodNumber(index)) {
+                result++;
             }
         }
     }
 
-    public static boolean isGoodNumber(int candidateIndex) {
+    private static boolean isGoodNumber(int index) {
+        int target = sequence[index];
         int left = 0;
         int right = lengthOfSequence - 1;
+        int sum;
 
         while (left < right) {
-            int sum = sequence[left] + sequence[right];
-
-            // 서로 다른 두 수의 합이 sequence[candidateIndex] 이 되면 good number
-            if (left == candidateIndex) {
+            if (left == index) {
                 left++;
                 continue;
             }
 
-            if (right == candidateIndex) {
+            if (right == index) {
                 right--;
                 continue;
             }
 
-            if (sum < sequence[candidateIndex]) {
+            sum = sequence[left] + sequence[right];
+
+            if (sum < target) {
                 left++;
             }
 
-            if (sum > sequence[candidateIndex]) {
+            if (sum > target) {
                 right--;
             }
 
-            if (sum == sequence[candidateIndex]) {
+            if (sum == target) {
                 return true;
             }
         }
+
         return false;
     }
 
     private static void output() {
-        System.out.println(numberOfGoodNumber);
+        System.out.println(result);
     }
 
-    public static void main(String[] args) throws IOException {
-        input();
-        process();
-        output();
-    }
 }
