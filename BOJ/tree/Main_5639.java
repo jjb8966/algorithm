@@ -3,25 +3,12 @@ package tree;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class Main_5639 {
 
-    private static Node rootNode;
-    private static Queue<Integer> queue = new LinkedList<>();
-    private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    private static int numberOfNode;
+    private static int[] nodes = new int[100_000];
     private static StringBuilder sb = new StringBuilder();
-
-    static class Node {
-        int key;
-        Node leftNode;
-        Node rightNode;
-
-        public Node(int key) {
-            this.key = key;
-        }
-    }
 
     public static void main(String[] args) throws IOException {
         input();
@@ -30,57 +17,42 @@ public class Main_5639 {
     }
 
     private static void input() throws IOException {
-        while (true) {
-            String temp = br.readLine();
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-            if (temp == null || temp.equals("")) {
-                break;
-            }
+        String node = br.readLine();
+        int index = 0;
 
-            queue.add(Integer.parseInt(temp));
+        while (node != null && !node.equals("")) {
+            nodes[index++] = Integer.parseInt(node);
+            node = br.readLine();
         }
+
+        numberOfNode = index;
     }
 
     private static void process() {
-        makeTree();
-        postOrder(rootNode);
+        postOrder(0, numberOfNode - 1);
     }
 
-    private static void postOrder(Node node) {
-        if (node == null) {
+    private static void postOrder(int start, int end) {
+        int currentNode = nodes[start];
+        int startRightNode = end + 1;
+
+        if (start > end) {
             return;
         }
 
-        postOrder(node.leftNode);
-        postOrder(node.rightNode);
-
-        sb.append(node.key).append('\n');
-    }
-
-    private static void makeTree() {
-        rootNode = new Node(queue.poll());
-
-        while (!queue.isEmpty()) {
-            insertNode(rootNode, queue.poll());
-        }
-    }
-
-    private static void insertNode(Node node, Integer insertKey) {
-        if (insertKey < node.key) {
-            if (node.leftNode == null) {
-                node.leftNode = new Node(insertKey);
-            } else {
-                insertNode(node.leftNode, insertKey);
+        for (int index = start + 1; index <= end; index++) {
+            if (nodes[index] > currentNode) {
+                startRightNode = index;
+                break;
             }
         }
 
-        if (insertKey > node.key) {
-            if (node.rightNode == null) {
-                node.rightNode = new Node(insertKey);
-            } else {
-                insertNode(node.rightNode, insertKey);
-            }
-        }
+        postOrder(start + 1, startRightNode - 1);
+        postOrder(startRightNode, end);
+
+        sb.append(currentNode).append('\n');
     }
 
     private static void output() {
