@@ -3,49 +3,57 @@ package dynamic_programming;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.function.Predicate;
 
-public class   Main_11057 {
-    private static int length;
-    private static int[][] dynamicSolution;
+public class Main_11057 {
+
+    private static int lengthOfNumber;
+    private static int[][] result;
+    private static StringBuilder sb = new StringBuilder();
+
+    public static void main(String[] args) throws IOException {
+        input();
+        process();
+        output();
+    }
 
     private static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        length = Integer.parseInt(br.readLine());
-        dynamicSolution = new int[length + 1][10];
+        lengthOfNumber = Integer.parseInt(br.readLine());
+
+        result = new int[lengthOfNumber + 1][10];
     }
 
     private static void process() {
-        // 초기값
-        for (int i = 0; i <= 9; i++) {
-            dynamicSolution[1][i] = 1;
+        for (int number = 0; number <= 9; number++) {
+            result[1][number] = 1;
         }
 
-        // 점화식
-        if (length >= 2) {
-            for (int i = 2; i <= length; i++) {
-                for (int j = 0; j <= 9; j++) {
-                    for (int k = 0; k <= j; k++) {
-                        dynamicSolution[i][j] += dynamicSolution[i - 1][k] % 10007;
+        if (lengthOfNumber >= 2) {
+            for (int digit = 2; digit <= lengthOfNumber; digit++) {
+                for (int number = 0; number <= 9; number++) {
+                    for (int lessThanNumber = 0; lessThanNumber <= number; lessThanNumber++) {
+                        result[digit][number] += result[digit - 1][lessThanNumber] % 10_007;
                     }
                 }
             }
         }
 
-        int result = 0;
+        updateResult();
+    }
 
-        for (int i = 0; i <= 9; i++) {
-            result += dynamicSolution[length][i] % 10007;
+    private static void updateResult() {
+        int sum = 0;
+
+        for (int number = 0; number <= 9; number++) {
+            sum += result[lengthOfNumber][number] % 10_007;
         }
 
-        result %= 10007;
-
-        System.out.println(result);
+        sb.append(sum % 10_007);
     }
 
-    public static void main(String[] args) throws IOException {
-        input();
-        process();
+    private static void output() {
+        System.out.println(sb);
     }
+
 }
