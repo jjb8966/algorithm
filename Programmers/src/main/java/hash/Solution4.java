@@ -1,7 +1,11 @@
 package hash;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
 
 public class Solution4 {
 
@@ -22,6 +26,22 @@ public class Solution4 {
         return answer - 1;
     }
 
+    public int solution2(String[][] clothes) {
+        int answer;
+        Map<String, Integer> clothMap = new HashMap<>();
+
+        Map<String, Long> collect = Arrays.stream(clothes)
+                .collect(groupingBy(p -> p[1], counting()));
+
+        System.out.println("collect = " + collect);
+
+        answer = collect.values().stream()
+                .reduce(1L, (a, b) -> a * (b + 1))
+                .intValue() - 1;
+
+        return answer;
+    }
+
     public static void main(String[] args) {
         Solution4 prob = new Solution4();
         String[][] clothes1 = {
@@ -36,6 +56,6 @@ public class Solution4 {
                 {"smoky_makeup", "face"}
         };
 
-        System.out.println(prob.solution(clothes1));
+        System.out.println(prob.solution2(clothes2));
     }
 }
