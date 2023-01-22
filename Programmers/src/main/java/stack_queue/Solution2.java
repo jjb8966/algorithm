@@ -12,21 +12,13 @@ public class Solution2 {
 
         for (int i = 0; i < length; i++) {
             int remain = 100 - progress[i];
-            int neededDay;
-
-            if (remain % speeds[i] == 0) {
-                neededDay = remain / speeds[i];
-            } else {
-                neededDay = remain / speeds[i] + 1;
-            }
+            int neededDay = (int) Math.ceil(remain / (double) speeds[i]);
 
             if (neededDay > max) {
                 max = neededDay;
                 stack.push(1);
             } else {
-                Integer lastCount = stack.pop();
-                lastCount++;
-                stack.push(lastCount);
+                stack.push(stack.pop() + 1);
             }
         }
 
