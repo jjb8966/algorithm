@@ -4,38 +4,44 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class Main_2217 {
 
-    private static int numberOfRope;
-    private static int[] ropes;
-
-    private static void input() throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        numberOfRope = Integer.parseInt(br.readLine());
-
-        ropes = new int[numberOfRope];
-
-        for (int i = 0; i < numberOfRope; i++) {
-            ropes[i] = Integer.parseInt(br.readLine());
-        }
-
-        Arrays.sort(ropes);
-    }
-
-    private static void process() {
-        int maxWeight = Integer.MIN_VALUE;
-
-        for (int i = 0; i < numberOfRope; i++) {
-            maxWeight = Math.max(maxWeight, ropes[i] * (numberOfRope - i));
-        }
-
-        System.out.println(maxWeight);
-    }
+    static int numberOfLope;
+    static int result;
+    static Integer[] lopes;
 
     public static void main(String[] args) throws IOException {
         input();
         process();
+        output();
     }
+
+    private static void input() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        numberOfLope = Integer.parseInt(br.readLine());
+
+        lopes = new Integer[numberOfLope];
+
+        for (int i = 0; i < numberOfLope; i++) {
+            lopes[i] = Integer.parseInt(br.readLine());
+        }
+    }
+
+    private static void process() {
+        result = Integer.MIN_VALUE;
+        Arrays.sort(lopes, Collections.reverseOrder());
+
+        for (int index = 0; index < lopes.length; index++) {
+            int countLope = index + 1;
+
+            result = Math.max(result, lopes[index] * countLope);
+        }
+    }
+
+    private static void output() {
+        System.out.println(result);
+    }
+
 }
