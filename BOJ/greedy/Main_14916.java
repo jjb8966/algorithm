@@ -6,42 +6,55 @@ import java.io.InputStreamReader;
 
 public class Main_14916 {
 
-    private static int change;
-
-    private static void input() throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        change = Integer.parseInt(br.readLine());
-    }
-
-    private static void process() {
-        int remain = change;
-        int countNumberTwo = 0;
-        int countNumberFive = 0;
-        int result;
-
-        while (remain != 0) {
-            if (remain % 5 == 0) {
-                countNumberFive = remain / 5;
-                break;
-            } else {
-                remain -= 2;
-                countNumberTwo++;
-            }
-
-            if (remain < 0) {
-                System.out.println("-1");
-                return;
-            }
-        }
-
-        result = countNumberTwo + countNumberFive;
-
-        System.out.println(result);
-    }
+    static int money;
+    static int result;
 
     public static void main(String[] args) throws IOException {
         input();
-        process();
+        process2();
+        output();
     }
+
+    private static void input() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        money = Integer.parseInt(br.readLine());
+    }
+
+    private static void process() {
+        int count = money / 5;
+
+        while (count >= 0) {
+            int remain = money - (count * 5);
+
+            if (remain % 2 != 0) {
+                count--;
+            } else {
+                result = count + (remain / 2);
+                break;
+            }
+        }
+
+        if (result == 0) {
+            result = -1;
+        }
+    }
+
+    private static void process2() {
+        while (money >= 0) {
+            if (money % 5 == 0) {
+                result += money / 5;
+                return;
+            }
+
+            money -= 2;
+            result++;
+        }
+
+        result = -1;
+    }
+
+    private static void output() {
+        System.out.println(result);
+    }
+
 }
