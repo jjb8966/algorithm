@@ -5,15 +5,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main_2178 {
 
-    private static int height;
-    private static int width;
-    private static int[][] map;
-    private static int[][] minimumDistance;
-    private static int[][] direction = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-    private static boolean[][] visited;
+    static int height;
+    static int width;
+    static int result;
+    static int[][] direction = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    static int[][] map;
+    static boolean[][] visited;
 
     public static void main(String[] args) throws IOException {
         input();
@@ -23,20 +24,20 @@ public class Main_2178 {
 
     private static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] temp = br.readLine().split(" ");
+        StringTokenizer st;
 
-        height = Integer.parseInt(temp[0]);
-        width = Integer.parseInt(temp[1]);
+        st = new StringTokenizer(br.readLine());
+        height = Integer.parseInt(st.nextToken());
+        width = Integer.parseInt(st.nextToken());
 
-        map = new int[width + 1][height + 1];
-        minimumDistance = new int[width + 1][height + 1];
         visited = new boolean[width + 1][height + 1];
+        map = new int[width + 1][height + 1];
 
         for (int y = 1; y <= height; y++) {
-            temp = br.readLine().split("");
+            String[] row = br.readLine().split("");
 
             for (int x = 1; x <= width; x++) {
-                map[x][y] = Integer.parseInt(temp[x - 1]);
+                map[x][y] = Integer.parseInt(row[x - 1]);
             }
         }
     }
@@ -48,13 +49,20 @@ public class Main_2178 {
     private static void bfs(int startX, int startY) {
         Queue<Integer> queue = new LinkedList<>();
 
-        queue.add(startX);
-        queue.add(startY);
-        minimumDistance[startX][startY] = 1;
+        visited[startX][startY] = true;
+        queue.offer(startX);
+        queue.offer(startY);
+        queue.offer(1);
 
         while (!queue.isEmpty()) {
-            int x = queue.poll();
-            int y = queue.poll();
+            Integer x = queue.poll();
+            Integer y = queue.poll();
+            Integer count = queue.poll();
+
+            if (x == width && y == height) {
+                result = count;
+                break;
+            }
 
             for (int dir = 0; dir < 4; dir++) {
                 int newX = x + direction[dir][0];
@@ -72,16 +80,16 @@ public class Main_2178 {
                     continue;
                 }
 
+                visited[newX][newY] = true;
                 queue.add(newX);
                 queue.add(newY);
-                visited[newX][newY] = true;
-                minimumDistance[newX][newY] = minimumDistance[x][y] + 1;
+                queue.add(count + 1);
             }
         }
     }
 
     private static void output() {
-        System.out.println(minimumDistance[width][height]);
+        System.out.println(result);
     }
 
 }
