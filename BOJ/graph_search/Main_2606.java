@@ -4,65 +4,95 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main_2606 {
 
-    private static ArrayList<ArrayList<Integer>> adjacencyList = new ArrayList<>();
-    private static int numberOfVertex;
-    private static int numberOfEdge;
-    private static int numberOfInfectedComputer = 0;
-    private static boolean[] visit;
+    static int numberOfComputer;
+    static int numberOfPair;
+    static int result;
+    static boolean[] visited;
+    static ArrayList<Integer>[] adjacencyList;
+
+    public static void main(String[] args) throws IOException {
+        input();
+        process();
+        output();
+    }
 
     private static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
 
-        numberOfVertex = Integer.parseInt(br.readLine());
-        numberOfEdge = Integer.parseInt(br.readLine());
+        numberOfComputer = Integer.parseInt(br.readLine());
+        numberOfPair = Integer.parseInt(br.readLine());
 
-        for (int i = 0; i <= numberOfVertex; i++) {  // 인덱스 1 ~ numberOfVertex 사용
-            adjacencyList.add(new ArrayList<>());
+        visited = new boolean[numberOfComputer + 1];
+        adjacencyList = new ArrayList[numberOfComputer + 1];
+
+        for (int i = 1; i <= numberOfComputer; i++) {
+            adjacencyList[i] = new ArrayList<>();
         }
 
-        visit = new boolean[numberOfVertex + 1];    // 인덱스 1 ~ numberOfVertex 사용
-
-        for (int i = 0; i < numberOfEdge; i++) {
+        for (int i = 0; i < numberOfPair; i++) {
             st = new StringTokenizer(br.readLine());
-
             int a = Integer.parseInt(st.nextToken());
             int b = Integer.parseInt(st.nextToken());
 
-            adjacencyList.get(a).add(b);
-            adjacencyList.get(b).add(a);
+            adjacencyList[a].add(b);
+            adjacencyList[b].add(a);
         }
 
-        for (ArrayList<Integer> integers : adjacencyList) {
-            System.out.println("integers = " + integers);
-        }
-    }
-
-    private static void dfs(int start) {
-        visit[start] = true;
-        numberOfInfectedComputer++;
-
-        for (Integer index : adjacencyList.get(start)) {
-            if (!visit[index]) {
-                dfs(index);
-            }
-        }
     }
 
     private static void process() {
-        // 1번 노드와 연결된 모든 노드 탐색
-        dfs(1);
-
-        // 1번 노드가 감염시킨 노드를 찾는것이므로 1번 노드 자신은 제외해야함
-        System.out.println(--numberOfInfectedComputer);
+//        result = dfs(1, 0);
+        result = bfs(1);
     }
 
-    public static void main(String[] args) throws IOException {
-        input();
-        process();
+    private static int dfs(int vertex, int count) {
+        visited[vertex] = true;
+
+        for (Integer nextVertex : adjacencyList[vertex]) {
+            if (visited[nextVertex]) {
+                continue;
+            }
+
+            visited[nextVertex] = true;
+            count = dfs(nextVertex, count + 1);
+        }
+
+        return count;
     }
+
+    private static int bfs(int start) {
+        int count = 0;
+        Queue<Integer> queue = new LinkedList<>();
+
+        visited[start] = true;
+        queue.offer(start);
+
+        while (!queue.isEmpty()) {
+            Integer vertex = queue.poll();
+
+            for (Integer nextVertex : adjacencyList[vertex]) {
+                if (visited[nextVertex]) {
+                    continue;
+                }
+
+                queue.add(nextVertex);
+                visited[nextVertex] = true;
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    private static void output() {
+        System.out.println(result);
+    }
+
 }
