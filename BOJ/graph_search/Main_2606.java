@@ -48,11 +48,11 @@ public class Main_2606 {
     }
 
     private static void process() {
-//        result = dfs(1, 0);
-        result = bfs(1);
+//        dfs(1);
+        bfs(1);
     }
 
-    private static int dfs(int vertex, int count) {
+    private static void dfs(int vertex) {
         visited[vertex] = true;
 
         for (Integer nextVertex : adjacencyList[vertex]) {
@@ -60,15 +60,12 @@ public class Main_2606 {
                 continue;
             }
 
-            visited[nextVertex] = true;
-            count = dfs(nextVertex, count + 1);
+            result++;
+            dfs(nextVertex);
         }
-
-        return count;
     }
 
-    private static int bfs(int start) {
-        int count = 0;
+    private static void bfs(int start) {
         Queue<Integer> queue = new LinkedList<>();
 
         visited[start] = true;
@@ -82,13 +79,11 @@ public class Main_2606 {
                     continue;
                 }
 
-                queue.add(nextVertex);
                 visited[nextVertex] = true;
-                count++;
+                result++;
+                queue.add(nextVertex);
             }
         }
-
-        return count;
     }
 
     private static void output() {
