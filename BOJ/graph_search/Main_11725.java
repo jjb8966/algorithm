@@ -4,14 +4,22 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main_11725 {
 
-    private static ArrayList<ArrayList<Integer>> adjacencyList = new ArrayList<>();
-    private static int numberOfVertex;
-    private static boolean[] visited;
-    private static int[] parentVertex;
+    static int numberOfVertex;
+    static int[] parent;
+    static boolean[] visited;
+    static ArrayList<Integer>[] adList;
+
+    public static void main(String[] args) throws IOException {
+        input();
+        process();
+        output();
+    }
 
     private static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -19,46 +27,68 @@ public class Main_11725 {
 
         numberOfVertex = Integer.parseInt(br.readLine());
 
-        for (int i = 0; i <= numberOfVertex; i++) {
-            adjacencyList.add(new ArrayList<>());
-        }
-
         visited = new boolean[numberOfVertex + 1];
-        parentVertex = new int[numberOfVertex + 1];
+        adList = new ArrayList[numberOfVertex + 1];
+        parent = new int[numberOfVertex + 1];
+
+        for (int i = 1; i <= numberOfVertex; i++) {
+            adList[i] = new ArrayList<>();
+        }
 
         for (int i = 0; i < numberOfVertex - 1; i++) {
             st = new StringTokenizer(br.readLine());
-
             int a = Integer.parseInt(st.nextToken());
             int b = Integer.parseInt(st.nextToken());
 
-            adjacencyList.get(a).add(b);
-            adjacencyList.get(b).add(a);
+            adList[a].add(b);
+            adList[b].add(a);
+        }
+
+    }
+
+    private static void process() {
+//        dfs(1);
+        bfs(1);
+    }
+
+    private static void dfs(int vertex) {
+        visited[vertex] = true;
+
+        for (Integer nextVertex : adList[vertex]) {
+            if (visited[nextVertex]) {
+                continue;
+            }
+
+            parent[nextVertex] = vertex;
+            dfs(nextVertex);
         }
     }
 
-    private static void dfs(int start, int parent) {
+    private static void bfs(int start) {
+        Queue<Integer> queue = new LinkedList<>();
+
         visited[start] = true;
+        queue.offer(start);
 
-        parentVertex[start] = parent;
+        while (!queue.isEmpty()) {
+            Integer vertex = queue.poll();
 
-        for (Integer childVertex : adjacencyList.get(start)) {
-            if (!visited[childVertex]) {
-                dfs(childVertex, start);
+            for (Integer nextVertex : adList[vertex]) {
+                if (visited[nextVertex]) {
+                    continue;
+                }
+
+                visited[nextVertex] = true;
+                parent[nextVertex] = vertex;
+                queue.add(nextVertex);
             }
         }
     }
 
-    private static void process() {
-        dfs(1, 0);
-
+    private static void output() {
         for (int i = 2; i <= numberOfVertex; i++) {
-            System.out.println(parentVertex[i]);
+            System.out.println(parent[i]);
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        input();
-        process();
-    }
 }
