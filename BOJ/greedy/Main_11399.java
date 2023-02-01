@@ -39,8 +39,8 @@ public class Main_11399 {
 
         Arrays.sort(times);
 
-        for (int i = 0; i < times.length; i++) {
-            currentTime += times[i];
+        for (int time : times) {
+            currentTime += time;
             result += currentTime;
         }
     }
