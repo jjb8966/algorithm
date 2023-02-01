@@ -38,7 +38,7 @@ public class Main_14712 {
         int newX;
         int newY;
 
-        if (x == 1 && y == height + 1) {
+        if (y > height) {
             result++;
             return;
         }
@@ -78,13 +78,14 @@ public class Main_14712 {
 
         if (map[x - 1][y] == 1 && map[x - 1][y - 1] == 1 && map[x][y - 1] == 1) {
             dfs2(count + 1);
-        } else {
-            dfs2(count + 1);
-
-            map[x][y] = 1;
-            dfs2(count + 1);
-            map[x][y] = 0;
+            return;
         }
+
+        dfs2(count + 1);
+
+        map[x][y] = 1;
+        dfs2(count + 1);
+        map[x][y] = 0;
     }
 
     private static void output() {
