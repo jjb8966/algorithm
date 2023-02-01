@@ -1,7 +1,8 @@
 package backtracking;
 
-import java.io.*;
-import java.util.Arrays;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main_14888 {
@@ -41,39 +42,38 @@ public class Main_14888 {
         dfs(1, sequence[0]);
     }
 
-    private static void dfs(int index, int sum) {
-        if (index == lengthOfSequence) {
+    private static void dfs(int nextIndex, int sum) {
+        if (nextIndex == lengthOfSequence) {
             max = Math.max(max, sum);
             min = Math.min(min, sum);
 
             return;
         }
 
-        for (int i = 0; i < 4; i++) {
-
-            if (operations[i] <= 0) {
+        for (int op = 0; op < 4; op++) {
+            if (operations[op] <= 0) {
                 continue;
             }
 
-            operations[i]--;
+            operations[op]--;
 
-            if (i == 0) {
-                dfs(index + 1, sum + sequence[index]);
+            if (op == 0) {
+                dfs(nextIndex + 1, sum + sequence[nextIndex]);
             }
 
-            if (i == 1) {
-                dfs(index + 1, sum - sequence[index]);
+            if (op == 1) {
+                dfs(nextIndex + 1, sum - sequence[nextIndex]);
             }
 
-            if (i == 2) {
-                dfs(index + 1, sum * sequence[index]);
+            if (op == 2) {
+                dfs(nextIndex + 1, sum * sequence[nextIndex]);
             }
 
-            if (i == 3) {
-                dfs(index + 1, sum / sequence[index]);
+            if (op == 3) {
+                dfs(nextIndex + 1, sum / sequence[nextIndex]);
             }
 
-            operations[i]++;
+            operations[op]++;
         }
     }
 
