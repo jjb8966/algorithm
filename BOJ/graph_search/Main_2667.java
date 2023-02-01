@@ -4,46 +4,47 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Main_2667 {
 
-    private static int sizeOfMap;
-    private static int countHouse;
-    private static int[][] direction = new int[][]{
-            {0, 1},
-            {0, -1},
-            {1, 0},
-            {-1, 0}
-    };
-    private static int[][] map;
-    private static boolean[][] visited;
-    private static List<Integer> town = new ArrayList<>();
+    static int size;
+    static int count;
+    static int[][] map;
+    static int[][] direction = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    static boolean[][] visited;
+    static StringBuilder sb = new StringBuilder();
+    static ArrayList<Integer> result = new ArrayList<>();
+
+    public static void main(String[] args) throws IOException {
+        input();
+        process();
+        output();
+    }
 
     private static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        sizeOfMap = Integer.parseInt(br.readLine());
+        size = Integer.parseInt(br.readLine());
 
-        map = new int[sizeOfMap + 1][sizeOfMap + 1];
-        visited = new boolean[sizeOfMap + 1][sizeOfMap + 1];
+        map = new int[size][size];
+        visited = new boolean[size][size];
 
-        for (int y = 1; y <= sizeOfMap; y++) {
-            String[] temp = br.readLine().split("");
+        for (int y = 0; y < size; y++) {
+            String[] row = br.readLine().split("");
 
-            for (int x = 1; x <= sizeOfMap; x++) {
-                map[x][y] = Integer.parseInt(temp[x - 1]);
+            for (int x = 0; x < size; x++) {
+                map[x][y] = Integer.parseInt(row[x]);
             }
         }
     }
 
     private static void process() {
-        for (int y = 1; y <= sizeOfMap; y++) {
-            for (int x = 1; x <= sizeOfMap; x++) {
-                countHouse = 0;
+        int numberOfVillage = 0;
 
-                // 해당 좌표에 집이 있으면서 방문한 적이 없는 집만 dfs
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
                 if (map[x][y] == 0) {
                     continue;
                 }
@@ -52,54 +53,84 @@ public class Main_2667 {
                     continue;
                 }
 
-                dfs(x, y);
-                town.add(countHouse);
+                count = 0;
+
+//                dfs(x, y);
+                bfs(x, y);
+
+                numberOfVillage++;
+                result.add(count);
             }
         }
+
+        sb.append(numberOfVillage).append('\n');
+        result.stream()
+                .sorted()
+                .forEach(r -> sb.append(r).append('\n'));
     }
 
-    // x,y 집을 방문할 수 있다는 것을 알고 온 상태
     private static void dfs(int x, int y) {
-        // visit check
         visited[x][y] = true;
-        // 정답 갱신
-        countHouse++;
+        count++;
 
-        // 방문할 수 있는 모든 집들에 대해 dfs
         for (int dir = 0; dir < 4; dir++) {
             int newX = x + direction[dir][0];
             int newY = y + direction[dir][1];
 
-            // 조건 1 : map 을 벗어나는 좌표면 continue
-            if (newX <= 0 || newY <= 0 || newX > sizeOfMap || newY > sizeOfMap) {
+            if (newX < 0 || newY < 0 || newX >= size || newY >= size) {
                 continue;
             }
 
-            // 조건 2 : 새로운 좌표에 집이 없으면 continue
-            if (map[newX][newY] == 0) {
-                continue;
-            }
-
-            // 조건 3 : 이미 방문한 상태이면 continue
             if (visited[newX][newY]) {
                 continue;
             }
 
-            // 모든 조건을 통과한 방문할 가치가 있는 좌표에 대해 dfs
+            if (map[newX][newY] == 0) {
+                continue;
+            }
+
             dfs(newX, newY);
         }
     }
 
+    private static void bfs(int startX, int startY) {
+        Queue<Integer> queue = new LinkedList<>();
+
+        visited[startX][startY] = true;
+        queue.offer(startX);
+        queue.offer(startY);
+
+        while (!queue.isEmpty()) {
+            Integer x = queue.poll();
+            Integer y = queue.poll();
+
+            count++;
+
+            for (int dir = 0; dir < 4; dir++) {
+                int newX = x + direction[dir][0];
+                int newY = y + direction[dir][1];
+
+                if (newX < 0 || newY < 0 || newX >= size || newY >= size) {
+                    continue;
+                }
+
+                if (visited[newX][newY]) {
+                    continue;
+                }
+
+                if (map[newX][newY] == 0) {
+                    continue;
+                }
+
+                visited[newX][newY] = true;
+                queue.offer(newX);
+                queue.offer(newY);
+            }
+        }
+    }
+
     private static void output() {
-        System.out.println(town.size());
-
-        Collections.sort(town);
-        town.forEach(System.out::println);
+        System.out.println(sb);
     }
 
-    public static void main(String[] args) throws IOException {
-        input();
-        process();
-        output();
-    }
 }
