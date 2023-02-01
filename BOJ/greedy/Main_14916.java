@@ -11,7 +11,7 @@ public class Main_14916 {
 
     public static void main(String[] args) throws IOException {
         input();
-        process2();
+        process();
         output();
     }
 
@@ -21,22 +21,20 @@ public class Main_14916 {
     }
 
     private static void process() {
-        int count = money / 5;
+        int count5 = money / 5;
 
-        while (count >= 0) {
-            int remain = money - (count * 5);
+        while (count5 >= 0) {
+            int remain = money - (count5 * 5);
 
-            if (remain % 2 != 0) {
-                count--;
+            if (remain % 2 == 0) {
+                result = count5 + (remain / 2);
+                return;
             } else {
-                result = count + (remain / 2);
-                break;
+                count5--;
             }
         }
 
-        if (result == 0) {
-            result = -1;
-        }
+        result = -1;
     }
 
     private static void process2() {
