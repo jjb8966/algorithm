@@ -41,29 +41,29 @@ public class Main_2667 {
     }
 
     private static void process() {
-        int numberOfVillage = 0;
+        int countOfVillage = 0;
 
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
-                if (map[x][y] == 0) {
-                    continue;
-                }
-
                 if (visited[x][y]) {
                     continue;
                 }
 
+                if (map[x][y] == 0) {
+                    continue;
+                }
+
                 count = 0;
+                countOfVillage++;
 
 //                dfs(x, y);
                 bfs(x, y);
 
-                numberOfVillage++;
                 result.add(count);
             }
         }
 
-        sb.append(numberOfVillage).append('\n');
+        sb.append(countOfVillage).append('\n');
         result.stream()
                 .sorted()
                 .forEach(r -> sb.append(r).append('\n'));
