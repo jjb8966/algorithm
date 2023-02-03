@@ -1,6 +1,8 @@
 package graph_search;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main_1260 {
@@ -42,13 +44,13 @@ public class Main_1260 {
             adList[a].add(b);
             adList[b].add(a);
         }
-
-        for (int i = 1; i <= numberOfVertex; i++) {
-            Collections.sort(adList[i]);
-        }
     }
 
     private static void process() {
+        for (int i = 1; i <= numberOfVertex; i++) {
+            Collections.sort(adList[i]);
+        }
+
         dfs(startVertex);
 
         sb.append('\n');
