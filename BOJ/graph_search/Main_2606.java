@@ -81,7 +81,7 @@ public class Main_2606 {
 
                 visited[nextVertex] = true;
                 result++;
-                queue.add(nextVertex);
+                queue.offer(nextVertex);
             }
         }
     }
