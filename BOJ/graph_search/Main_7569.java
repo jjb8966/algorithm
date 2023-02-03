@@ -20,7 +20,21 @@ public class Main_7569 {
             {0, 1, 0}, {0, -1, 0}       // 앞, 뒤
     };
     static boolean[][][] visited;
-    static Queue<Integer> seed = new LinkedList<>();
+    static Queue<Tomato> queue = new LinkedList<>();
+
+    static class Tomato {
+        int x;
+        int y;
+        int z;
+        int day;
+
+        public Tomato(int x, int y, int z, int day) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.day = day;
+        }
+    }
 
     public static void main(String[] args) throws IOException {
         input();
@@ -49,9 +63,7 @@ public class Main_7569 {
 
                     if (map[x][y][z] == 1) {
                         visited[x][y][z] = true;
-                        seed.offer(x);
-                        seed.offer(y);
-                        seed.offer(z);
+                        queue.offer(new Tomato(x, y, z, 0));
                     }
 
                     if (map[x][y][z] == -1) {
@@ -90,26 +102,12 @@ public class Main_7569 {
     }
 
     private static void bfs() {
-        Queue<Integer> queue = new LinkedList<>();
-
-        while (!seed.isEmpty()) {
-            Integer seedX = seed.poll();
-            Integer seedY = seed.poll();
-            Integer seedZ = seed.poll();
-
-            visited[seedX][seedY][seedZ] = true;
-
-            queue.offer(seedX);
-            queue.offer(seedY);
-            queue.offer(seedZ);
-            queue.offer(0);
-        }
-
         while (!queue.isEmpty()) {
-            Integer x = queue.poll();
-            Integer y = queue.poll();
-            Integer z = queue.poll();
-            Integer day = queue.poll();
+            Tomato tomato = queue.poll();
+            int x = tomato.x;
+            int y = tomato.y;
+            int z = tomato.z;
+            int day = tomato.day;
 
             result = Math.max(result, day);
 
@@ -127,10 +125,7 @@ public class Main_7569 {
                 }
 
                 visited[newX][newY][newZ] = true;
-                queue.add(newX);
-                queue.add(newY);
-                queue.add(newZ);
-                queue.add(day + 1);
+                queue.add(new Tomato(newX, newY, newZ, day + 1));
             }
         }
     }
