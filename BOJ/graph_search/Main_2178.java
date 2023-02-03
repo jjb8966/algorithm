@@ -47,20 +47,22 @@ public class Main_2178 {
     }
 
     private static void bfs(int startX, int startY) {
+        int count = 0;
         Queue<Integer> queue = new LinkedList<>();
 
         visited[startX][startY] = true;
+        count++;
         queue.offer(startX);
         queue.offer(startY);
-        queue.offer(1);
+        queue.offer(count);
 
         while (!queue.isEmpty()) {
             Integer x = queue.poll();
             Integer y = queue.poll();
-            Integer count = queue.poll();
+            Integer currentCount = queue.poll();
 
             if (x == width && y == height) {
-                result = count;
+                result = currentCount;
                 break;
             }
 
@@ -81,9 +83,9 @@ public class Main_2178 {
                 }
 
                 visited[newX][newY] = true;
-                queue.add(newX);
-                queue.add(newY);
-                queue.add(count + 1);
+                queue.offer(newX);
+                queue.offer(newY);
+                queue.offer(currentCount + 1);
             }
         }
     }
