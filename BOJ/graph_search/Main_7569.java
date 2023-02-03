@@ -3,32 +3,24 @@ package graph_search;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main_7569 {
 
-    private static int width;
-    private static int height;
-    private static int layer;
-    private static int result;
-    private static int[][] direction = {{-1, 0, 0}, {1, 0, 0}, {0, -1, 0}, {0, 1, 0}, {0, 0, -1}, {0, 0, 1}}; //위,아래,뒤,앞,왼쪽,오른쪽
-    private static int[][][] adjacencyMatrix;
-    private static boolean[][][] visited;
-    private static ArrayList<Coordinate> seeds = new ArrayList<>();
-
-    static class Coordinate {
-        int z;
-        int x;
-        int y;
-        int count;
-
-        public Coordinate(int z, int x, int y, int count) {
-            this.z = z;
-            this.x = x;
-            this.y = y;
-            this.count = count;
-        }
-    }
+    static int width;
+    static int height;
+    static int layer;
+    static int result;
+    static int[][][] map;
+    static int[][] direction = {
+            {0, 0, 1}, {0, 0, -1},      // 위, 아래
+            {1, 0, 0}, {-1, 0, 0},      // 오른쪽, 왼쪽
+            {0, 1, 0}, {0, -1, 0}       // 앞, 뒤
+    };
+    static boolean[][][] visited;
+    static Queue<Integer> seed = new LinkedList<>();
 
     public static void main(String[] args) throws IOException {
         input();
@@ -45,23 +37,25 @@ public class Main_7569 {
         height = Integer.parseInt(st.nextToken());
         layer = Integer.parseInt(st.nextToken());
 
-        adjacencyMatrix = new int[layer + 1][height + 1][width + 1];
-        visited = new boolean[layer + 1][height + 1][width + 1];
+        map = new int[width][height][layer];
+        visited = new boolean[width][height][layer];
 
-        for (int z = 1; z <= layer; z++) {
-            for (int x = 1; x <= height; x++) {
+        for (int z = 0; z < layer; z++) {
+            for (int y = 0; y < height; y++) {
                 st = new StringTokenizer(br.readLine());
 
-                for (int y = 1; y <= width; y++) {
-                    adjacencyMatrix[z][x][y] = Integer.parseInt(st.nextToken());
+                for (int x = 0; x < width; x++) {
+                    map[x][y][z] = Integer.parseInt(st.nextToken());
 
-                    if (adjacencyMatrix[z][x][y] == 1) {
-                        seeds.add(new Coordinate(z, x, y, 0));
-                        visited[z][x][y] = true;
+                    if (map[x][y][z] == 1) {
+                        visited[x][y][z] = true;
+                        seed.offer(x);
+                        seed.offer(y);
+                        seed.offer(z);
                     }
 
-                    if (adjacencyMatrix[z][x][y] == -1) {
-                        visited[z][x][y] = true;
+                    if (map[x][y][z] == -1) {
+                        visited[x][y][z] = true;
                     }
                 }
             }
@@ -81,46 +75,11 @@ public class Main_7569 {
         }
     }
 
-    private static void bfs() {
-        Queue<Coordinate> queue = new LinkedList<>();
-
-        seeds.stream().forEach(seed -> queue.add(seed));
-
-        while (!queue.isEmpty()) {
-            Coordinate coordinate = queue.poll();
-            int z = coordinate.z;
-            int x = coordinate.x;
-            int y = coordinate.y;
-            result = coordinate.count;
-
-            for (int dir = 0; dir < 6; dir++) {
-                int newZ = z + direction[dir][0];
-                int newX = x + direction[dir][1];
-                int newY = y + direction[dir][2];
-
-                if (newZ <= 0 || newX <= 0 || newY <= 0 || newZ > layer || newX > height || newY > width) {
-                    continue;
-                }
-
-                if (visited[newZ][newX][newY]) {
-                    continue;
-                }
-
-                if (adjacencyMatrix[newZ][newX][newY] == -1) {
-                    continue;
-                }
-
-                queue.add(new Coordinate(newZ, newX, newY, coordinate.count + 1));
-                visited[newZ][newX][newY] = true;
-            }
-        }
-    }
-
     private static boolean allVisit() {
-        for (int z = 1; z <= layer; z++) {
-            for (int x = 1; x <= height; x++) {
-                for (int y = 1; y <= width; y++) {
-                    if (!visited[z][x][y]) {
+        for (int z = 0; z < layer; z++) {
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    if (!visited[x][y][z]) {
                         return false;
                     }
                 }
@@ -128,6 +87,52 @@ public class Main_7569 {
         }
 
         return true;
+    }
+
+    private static void bfs() {
+        Queue<Integer> queue = new LinkedList<>();
+
+        while (!seed.isEmpty()) {
+            Integer seedX = seed.poll();
+            Integer seedY = seed.poll();
+            Integer seedZ = seed.poll();
+
+            visited[seedX][seedY][seedZ] = true;
+
+            queue.offer(seedX);
+            queue.offer(seedY);
+            queue.offer(seedZ);
+            queue.offer(0);
+        }
+
+        while (!queue.isEmpty()) {
+            Integer x = queue.poll();
+            Integer y = queue.poll();
+            Integer z = queue.poll();
+            Integer day = queue.poll();
+
+            result = Math.max(result, day);
+
+            for (int dir = 0; dir < 6; dir++) {
+                int newX = x + direction[dir][0];
+                int newY = y + direction[dir][1];
+                int newZ = z + direction[dir][2];
+
+                if (newX < 0 || newY < 0 || newZ < 0 || newX >= width || newY >= height || newZ >= layer) {
+                    continue;
+                }
+
+                if (visited[newX][newY][newZ]) {
+                    continue;
+                }
+
+                visited[newX][newY][newZ] = true;
+                queue.add(newX);
+                queue.add(newY);
+                queue.add(newZ);
+                queue.add(day + 1);
+            }
+        }
     }
 
     private static void output() {
