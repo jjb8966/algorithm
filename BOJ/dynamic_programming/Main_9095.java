@@ -6,18 +6,17 @@ import java.io.InputStreamReader;
 
 public class Main_9095 {
 
-    private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    private static StringBuilder sb = new StringBuilder();
-    private static int targetNumber;
-    private static int[] result = new int[11 + 1];
+    static int targetNumber;
+    static int[] dp;
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
         int testCase = Integer.parseInt(br.readLine());
 
-        process();
-
         for (int i = 0; i < testCase; i++) {
             input();
+            process();
         }
 
         output();
@@ -25,17 +24,23 @@ public class Main_9095 {
 
     private static void input() throws IOException {
         targetNumber = Integer.parseInt(br.readLine());
-        sb.append(result[targetNumber]).append('\n');
+        dp = new int[targetNumber + 1];
     }
 
     private static void process() {
-        result[1] = 1;
-        result[2] = 2;
-        result[3] = 4;
-
-        for (int index = 4; index <= 11; index++) {
-            result[index] = result[index - 1] + result[index - 2] + result[index - 3];
+        if (targetNumber <= 3) {
+            dp = new int[3 + 1];
         }
+
+        dp[1] = 1;
+        dp[2] = 2;
+        dp[3] = 4;
+
+        for (int number = 4; number <= targetNumber; number++) {
+            dp[number] = dp[number - 1] + dp[number - 2] + dp[number - 3];
+        }
+
+        sb.append(dp[targetNumber]).append('\n');
     }
 
     private static void output() {
