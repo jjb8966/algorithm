@@ -6,8 +6,8 @@ import java.io.InputStreamReader;
 
 public class Main_11726 {
 
-    private static int targetNumber;
-    private static long[] result = new long[1000 + 1];
+    static int targetNumber;
+    static int[] dp;
 
     public static void main(String[] args) throws IOException {
         input();
@@ -17,21 +17,28 @@ public class Main_11726 {
 
     private static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
         targetNumber = Integer.parseInt(br.readLine());
+
+        dp = new int[targetNumber + 1];
     }
 
     private static void process() {
-        result[1] = 1;
-        result[2] = 2;
+        if (targetNumber <= 3) {
+            dp = new int[3 + 1];
+        }
 
-        for (int index = 3; index <= targetNumber; index++) {
-            result[index] = (result[index - 1] + result[index - 2]) % 10_007;
+        dp[1] = 1;
+        dp[2] = 2;
+        dp[3] = 3;
+
+        for (int number = 4; number <= targetNumber; number++) {
+            dp[number] = dp[number - 1] + dp[number - 2];
+            dp[number] %= 10_007;
         }
     }
 
     private static void output() {
-        System.out.println(result[targetNumber]);
+        System.out.println(dp[targetNumber]);
     }
 
 }
