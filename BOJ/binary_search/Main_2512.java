@@ -8,10 +8,10 @@ import java.util.StringTokenizer;
 
 public class Main_2512 {
 
-    private static int numberOfRegion;
-    private static int[] budgetRequests;
-    private static int totalBudget;
-    private static int upperLimitBudget;
+    static int numberOfRegions;
+    static int totalBudget;
+    static int result;
+    static int[] budgets;
 
     public static void main(String[] args) throws IOException {
         input();
@@ -23,54 +23,53 @@ public class Main_2512 {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
 
-        numberOfRegion = Integer.parseInt(br.readLine());
+        numberOfRegions = Integer.parseInt(br.readLine());
 
-        budgetRequests = new int[numberOfRegion];
+        budgets = new int[numberOfRegions];
 
         st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < numberOfRegion; i++) {
-            budgetRequests[i] = Integer.parseInt(st.nextToken());
+        for (int i = 0; i < numberOfRegions; i++) {
+            budgets[i] = Integer.parseInt(st.nextToken());
         }
 
         totalBudget = Integer.parseInt(br.readLine());
     }
 
     private static void process() {
-        int maxBudget = Arrays.stream(budgetRequests).max().getAsInt();
+        int maxBudget = Arrays.stream(budgets).max().getAsInt();
 
-        binarySearch(1, maxBudget);
+        binarySearch(0, maxBudget);
     }
 
-    private static void binarySearch(int minBudget, int maxBudget) {
-        int currentBudget = (minBudget + maxBudget) / 2;
-        int sumOfBudget = 0;
+    private static void binarySearch(int min, int max) {
+        while (min <= max) {
+            int mid = (min + max) / 2;
 
-        if (minBudget > maxBudget) {
-            return;
-        }
-
-        for (int region = 0; region < numberOfRegion; region++) {
-            if (budgetRequests[region] <= currentBudget) {
-                sumOfBudget += budgetRequests[region];
+            if (isPossible(mid)) {
+                result = mid;
+                min = mid + 1;
             } else {
-                sumOfBudget += currentBudget;
+                max = mid - 1;
+            }
+        }
+    }
+
+    private static boolean isPossible(int currentBudget) {
+        int sum = 0;
+
+        for (int i = 0; i < numberOfRegions; i++) {
+            if (budgets[i] <= currentBudget) {
+                sum += budgets[i];
+            } else {
+                sum += currentBudget;
             }
         }
 
-        if (sumOfBudget <= totalBudget) {
-            upperLimitBudget = currentBudget;
-            minBudget = currentBudget + 1;
-        }
-
-        if (sumOfBudget > totalBudget) {
-            maxBudget = currentBudget - 1;
-        }
-
-        binarySearch(minBudget, maxBudget);
+        return sum <= totalBudget;
     }
 
     private static void output() {
-        System.out.println(upperLimitBudget);
+        System.out.println(result);
     }
 
 }
