@@ -8,11 +8,11 @@ import java.util.StringTokenizer;
 
 public class Main_10815 {
 
-    private static int numberOfCard;
-    private static int numberOfTarget;
-    private static int[] cards;
-    private static int[] targetCards;
-    private static StringBuilder sb = new StringBuilder();
+    static int numberOfCards;
+    static int numberOfSearches;
+    static int[] cards;
+    static int[] searches;
+    static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
         input();
@@ -24,53 +24,54 @@ public class Main_10815 {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
 
-        numberOfCard = Integer.parseInt(br.readLine());
+        numberOfCards = Integer.parseInt(br.readLine());
 
-        cards = new int[numberOfCard];
+        cards = new int[numberOfCards];
 
         st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < numberOfCard; i++) {
+        for (int i = 0; i < numberOfCards; i++) {
             cards[i] = Integer.parseInt(st.nextToken());
         }
 
-        numberOfTarget = Integer.parseInt(br.readLine());
+        numberOfSearches = Integer.parseInt(br.readLine());
 
-        targetCards = new int[numberOfTarget];
+        searches = new int[numberOfSearches];
 
         st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < numberOfTarget; i++) {
-            targetCards[i] = Integer.parseInt(st.nextToken());
+        for (int i = 0; i < numberOfSearches; i++) {
+            searches[i] = Integer.parseInt(st.nextToken());
         }
     }
 
     private static void process() {
         Arrays.sort(cards);
 
-        for (int index = 0; index < numberOfTarget; index++) {
-            binarySearch(0, numberOfCard - 1, targetCards[index]);
+        for (int index = 0; index < numberOfSearches; index++) {
+            binarySearch(0, numberOfCards - 1, index);
         }
     }
 
-    private static void binarySearch(int left, int right, int target) {
-        int mid = (left + right) / 2;
+    private static void binarySearch(int min, int max, int index) {
+        int target = searches[index];
 
-        if (left > right) {
-            sb.append(0).append(" ");
-            return;
+        while (min <= max) {
+            int mid = (min + max) / 2;
+
+            if (cards[mid] == target) {
+                sb.append(1).append(" ");
+                return;
+            }
+
+            if (cards[mid] < target) {
+                min = mid + 1;
+            }
+
+            if (cards[mid] > target) {
+                max = mid - 1;
+            }
         }
 
-        if (cards[mid] == target) {
-            sb.append(1).append(" ");
-            return;
-        }
-
-        if (cards[mid] < target) {
-            left = mid + 1;
-        } else {
-            right = mid - 1;
-        }
-
-        binarySearch(left, right, target);
+        sb.append(0).append(" ");
     }
 
     private static void output() {
