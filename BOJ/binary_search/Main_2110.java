@@ -8,10 +8,10 @@ import java.util.StringTokenizer;
 
 public class Main_2110 {
 
-    private static int numberOfHouse;
-    private static int numberOfRouter;
-    private static int maxDistance;
-    private static int[] houseCoordinate;
+    static int numberOfRouters;
+    static int numberOfHouses;
+    static int result;
+    static int[] houses;
 
     public static void main(String[] args) throws IOException {
         input();
@@ -24,57 +24,55 @@ public class Main_2110 {
         StringTokenizer st;
 
         st = new StringTokenizer(br.readLine());
-        numberOfHouse = Integer.parseInt(st.nextToken());
-        numberOfRouter = Integer.parseInt(st.nextToken());
+        numberOfHouses = Integer.parseInt(st.nextToken());
+        numberOfRouters = Integer.parseInt(st.nextToken());
 
-        houseCoordinate = new int[numberOfHouse + 1];
+        houses = new int[numberOfHouses];
 
-        for (int i = 1; i <= numberOfHouse; i++) {
-            houseCoordinate[i] = Integer.parseInt(br.readLine());
+        for (int i = 0; i < numberOfHouses; i++) {
+            houses[i] = Integer.parseInt(br.readLine());
         }
     }
 
     private static void process() {
-        binarySearch();
+        Arrays.sort(houses);
+
+        int maxGap = houses[numberOfHouses - 1] - houses[0];
+
+        binarySearch(0, maxGap);
     }
 
-    private static void binarySearch() {
-        int start = 0;
-        int end = 1_000_000_000;
+    private static void binarySearch(int min, int max) {
+        while (min <= max) {
+            int mid = (min + max) / 2;
 
-        Arrays.sort(houseCoordinate);
-
-        while (start <= end) {
-            int mid = (start + end) / 2;
-
-            if (isAvailable(mid)) {
-                maxDistance = mid;
-                start = mid + 1;
+            if (isPossible(mid)) {
+                result = mid;
+                min = mid + 1;
             } else {
-                end = mid - 1;
+                max = mid - 1;
             }
         }
     }
 
-    private static boolean isAvailable(int distance) {
-        int countRouter = 1;
-        int leftRouterCoordinate = houseCoordinate[1];
+    private static boolean isPossible(int distance) {
+        int count = 1;
+        int leftRouter = houses[0];
 
-        for (int house = 2; house <= numberOfHouse; house++) {
-            int rightRouterCoordinate = houseCoordinate[house];
-            int gap = rightRouterCoordinate - leftRouterCoordinate;
+        for (int index = 1; index < numberOfHouses; index++) {
+            int rightRouter = houses[index];
 
-            if (gap >= distance) {
-                countRouter++;
-                leftRouterCoordinate = rightRouterCoordinate;
+            if (rightRouter - leftRouter >= distance) {
+                count++;
+                leftRouter = rightRouter;
             }
         }
 
-        return countRouter >= numberOfRouter;
+        return count >= numberOfRouters;
     }
 
     private static void output() {
-        System.out.println(maxDistance);
+        System.out.println(result);
     }
 
 }
