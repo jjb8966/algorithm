@@ -6,8 +6,8 @@ import java.io.InputStreamReader;
 
 public class Main_1789 {
 
-    private static long targetNumber;
-    private static long result;
+    static long sumOfNumber;
+    static long result;
 
     public static void main(String[] args) throws IOException {
         input();
@@ -17,42 +17,52 @@ public class Main_1789 {
 
     private static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        targetNumber = Long.parseLong(br.readLine());
+        sumOfNumber = Long.parseLong(br.readLine());
     }
 
     private static void process() {
-        binarySearch(1L, targetNumber);
+//        binarySearch(1L, sumOfNumber);
+        binarySearch2(1L, sumOfNumber);
     }
 
-    private static void binarySearch(long minCount, long maxCount) {
-        long currentCount = (minCount + maxCount) / 2;
-
-        if (minCount > maxCount) {
+    private static void binarySearch(long min, long max) {
+        if (min > max) {
             return;
         }
 
-        if (isPossible(currentCount)) {
-            result = currentCount;
-            minCount = currentCount + 1;
+        long mid = (min + max) / 2;
+
+        if (isPossible(mid)) {
+            result = mid;
+            min = mid + 1;
         } else {
-            maxCount = currentCount - 1;
+            max = mid - 1;
         }
 
-        binarySearch(minCount, maxCount);
+        binarySearch(min, max);
     }
 
-    private static boolean isPossible(long currentCount) {
+    private static void binarySearch2(long min, long max) {
+        while (min <= max) {
+            long mid = (min + max) / 2;
+
+            if (isPossible(mid)) {
+                result = mid;
+                min = mid + 1;
+            } else {
+                max = mid - 1;
+            }
+        }
+    }
+
+    private static boolean isPossible(long count) {
         long sum = 0;
 
-        for (long i = 1; i <= currentCount; i++) {
-            sum += i;
+        for (long number = 1; number <= count; number++) {
+            sum += number;
         }
 
-        if (targetNumber >= sum) {
-            return true;
-        }
-
-        return false;
+        return sum <= sumOfNumber;
     }
 
     private static void output() {
