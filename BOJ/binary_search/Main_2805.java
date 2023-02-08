@@ -36,11 +36,11 @@ public class Main_2805 {
     }
 
     private static void process() {
-        int maxHeight = Arrays.stream(trees)
+        int max = Arrays.stream(trees)
                 .max()
                 .getAsInt();
 
-        binarySearch(1, maxHeight);
+        binarySearch(0, max);
     }
 
     private static void binarySearch(int min, int max) {
@@ -56,12 +56,12 @@ public class Main_2805 {
         }
     }
 
-    private static boolean isPossible(int currentHeight) {
+    private static boolean isPossible(int height) {
         long sum = 0;
 
         for (int i = 0; i < numberOfTrees; i++) {
-            if (trees[i] > currentHeight) {
-                sum += trees[i] - currentHeight;
+            if (trees[i] > height) {
+                sum += trees[i] - height;
             }
         }
 
@@ -71,5 +71,4 @@ public class Main_2805 {
     private static void output() {
         System.out.println(result);
     }
-
 }
