@@ -8,9 +8,9 @@ import java.util.StringTokenizer;
 
 public class Main_2110 {
 
-    static int numberOfRouters;
     static int numberOfHouses;
-    static int result;
+    static int numberOfRouters;
+    static int maxDistance;
     static int[] houses;
 
     public static void main(String[] args) throws IOException {
@@ -39,7 +39,7 @@ public class Main_2110 {
 
         int maxGap = houses[numberOfHouses - 1] - houses[0];
 
-        binarySearch(0, maxGap);
+        binarySearch(1, maxGap);
     }
 
     private static void binarySearch(int min, int max) {
@@ -47,7 +47,7 @@ public class Main_2110 {
             int mid = (min + max) / 2;
 
             if (isPossible(mid)) {
-                result = mid;
+                maxDistance = mid;
                 min = mid + 1;
             } else {
                 max = mid - 1;
@@ -59,8 +59,8 @@ public class Main_2110 {
         int count = 1;
         int leftRouter = houses[0];
 
-        for (int index = 1; index < numberOfHouses; index++) {
-            int rightRouter = houses[index];
+        for (int house = 1; house < numberOfHouses; house++) {
+            int rightRouter = houses[house];
 
             if (rightRouter - leftRouter >= distance) {
                 count++;
@@ -72,7 +72,7 @@ public class Main_2110 {
     }
 
     private static void output() {
-        System.out.println(result);
+        System.out.println(maxDistance);
     }
 
 }
