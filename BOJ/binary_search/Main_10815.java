@@ -52,21 +52,19 @@ public class Main_10815 {
     }
 
     private static void binarySearch(int min, int max, int index) {
-        int target = searches[index];
-
         while (min <= max) {
             int mid = (min + max) / 2;
 
-            if (cards[mid] == target) {
+            if (cards[mid] == searches[index]) {
                 sb.append(1).append(" ");
                 return;
             }
 
-            if (cards[mid] < target) {
+            if (cards[mid] < searches[index]) {
                 min = mid + 1;
             }
 
-            if (cards[mid] > target) {
+            if (cards[mid] > searches[index]) {
                 max = mid - 1;
             }
         }
