@@ -10,7 +10,7 @@ public class Main_2512 {
 
     static int numberOfRegions;
     static int totalBudget;
-    static int result;
+    static int maxBudget;
     static int[] budgets;
 
     public static void main(String[] args) throws IOException {
@@ -36,17 +36,20 @@ public class Main_2512 {
     }
 
     private static void process() {
-        int maxBudget = Arrays.stream(budgets).max().getAsInt();
+        int max = Arrays.stream(budgets)
+                .max()
+                .getAsInt();
 
-        binarySearch(0, maxBudget);
+        binarySearch(0, max);
     }
+
 
     private static void binarySearch(int min, int max) {
         while (min <= max) {
             int mid = (min + max) / 2;
 
             if (isPossible(mid)) {
-                result = mid;
+                maxBudget = mid;
                 min = mid + 1;
             } else {
                 max = mid - 1;
@@ -54,14 +57,14 @@ public class Main_2512 {
         }
     }
 
-    private static boolean isPossible(int currentBudget) {
+    private static boolean isPossible(int budget) {
         int sum = 0;
 
-        for (int i = 0; i < numberOfRegions; i++) {
-            if (budgets[i] <= currentBudget) {
-                sum += budgets[i];
+        for (int region = 0; region < numberOfRegions; region++) {
+            if (budgets[region] > budget) {
+                sum += budget;
             } else {
-                sum += currentBudget;
+                sum += budgets[region];
             }
         }
 
@@ -69,7 +72,7 @@ public class Main_2512 {
     }
 
     private static void output() {
-        System.out.println(result);
+        System.out.println(maxBudget);
     }
 
 }
