@@ -14,6 +14,7 @@ public class Main_11725 {
     static int[] parent;
     static boolean[] visited;
     static ArrayList<Integer>[] adList;
+    static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
         input();
@@ -47,20 +48,11 @@ public class Main_11725 {
     }
 
     private static void process() {
-//        dfs(1);
-        bfs(1);
-    }
+//        bfs(1);
+        dfs(1);
 
-    private static void dfs(int vertex) {
-        visited[vertex] = true;
-
-        for (Integer nextVertex : adList[vertex]) {
-            if (visited[nextVertex]) {
-                continue;
-            }
-
-            parent[nextVertex] = vertex;
-            dfs(nextVertex);
+        for (int i = 2; i <= numberOfVertex; i++) {
+            sb.append(parent[i]).append('\n');
         }
     }
 
@@ -78,17 +70,28 @@ public class Main_11725 {
                     continue;
                 }
 
-                visited[nextVertex] = true;
                 parent[nextVertex] = vertex;
-                queue.add(nextVertex);
+                visited[nextVertex] = true;
+                queue.offer(nextVertex);
             }
         }
     }
 
-    private static void output() {
-        for (int i = 2; i <= numberOfVertex; i++) {
-            System.out.println(parent[i]);
+    private static void dfs(int vertex) {
+        visited[vertex] = true;
+
+        for (Integer nextVertex : adList[vertex]) {
+            if (visited[nextVertex]) {
+                continue;
+            }
+
+            parent[nextVertex] = vertex;
+            dfs(nextVertex);
         }
+    }
+
+    private static void output() {
+        System.out.println(sb);
     }
 
 }
