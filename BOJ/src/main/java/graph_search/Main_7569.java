@@ -125,7 +125,7 @@ public class Main_7569 {
                 }
 
                 visited[newX][newY][newZ] = true;
-                queue.add(new Tomato(newX, newY, newZ, day + 1));
+                queue.offer(new Tomato(newX, newY, newZ, day + 1));
             }
         }
     }
