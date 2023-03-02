@@ -48,21 +48,8 @@ public class Main_2606 {
     }
 
     private static void process() {
-//        dfs(1);
-        bfs(1);
-    }
-
-    private static void dfs(int vertex) {
-        visited[vertex] = true;
-
-        for (Integer nextVertex : adjacencyList[vertex]) {
-            if (visited[nextVertex]) {
-                continue;
-            }
-
-            result++;
-            dfs(nextVertex);
-        }
+//        bfs(1);
+        dfs(1);
     }
 
     private static void bfs(int start) {
@@ -79,10 +66,23 @@ public class Main_2606 {
                     continue;
                 }
 
-                visited[nextVertex] = true;
                 result++;
+                visited[nextVertex] = true;
                 queue.offer(nextVertex);
             }
+        }
+    }
+
+    private static void dfs(int vertex) {
+        visited[vertex] = true;
+
+        for (Integer nextVertex : adjacencyList[vertex]) {
+            if (visited[nextVertex]) {
+                continue;
+            }
+
+            result++;
+            dfs(nextVertex);
         }
     }
 
