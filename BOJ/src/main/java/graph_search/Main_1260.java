@@ -47,14 +47,13 @@ public class Main_1260 {
     }
 
     private static void process() {
-        for (int i = 1; i <= numberOfVertex; i++) {
-            Collections.sort(adList[i]);
-        }
+        Arrays.stream(adList)
+                .filter(Objects::nonNull)
+                .forEach(Collections::sort);
 
         dfs(startVertex);
 
         sb.append('\n');
-        Arrays.fill(visited, false);
 
         bfs(startVertex);
     }
@@ -74,13 +73,14 @@ public class Main_1260 {
 
     private static void bfs(int start) {
         Queue<Integer> queue = new LinkedList<>();
+        visited = new boolean[numberOfVertex + 1];
 
         visited[start] = true;
-        sb.append(start).append(" ");
         queue.offer(start);
 
         while (!queue.isEmpty()) {
             Integer vertex = queue.poll();
+            sb.append(vertex).append(" ");
 
             for (Integer nextVertex : adList[vertex]) {
                 if (visited[nextVertex]) {
@@ -88,8 +88,7 @@ public class Main_1260 {
                 }
 
                 visited[nextVertex] = true;
-                sb.append(nextVertex).append(" ");
-                queue.add(nextVertex);
+                queue.offer(nextVertex);
             }
         }
     }
