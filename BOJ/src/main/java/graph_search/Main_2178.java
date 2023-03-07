@@ -12,7 +12,7 @@ public class Main_2178 {
     static int height;
     static int width;
     static int result;
-    static int[][] direction = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    static int[][] direction = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
     static int[][] map;
     static boolean[][] visited;
 
@@ -43,15 +43,14 @@ public class Main_2178 {
     }
 
     private static void process() {
-        bfs(1, 1);
+        result = bfs(1, 1);
     }
 
-    private static void bfs(int startX, int startY) {
-        int count = 0;
+    private static int bfs(int startX, int startY) {
         Queue<Integer> queue = new LinkedList<>();
+        int count = 1;
 
         visited[startX][startY] = true;
-        count++;
         queue.offer(startX);
         queue.offer(startY);
         queue.offer(count);
@@ -62,8 +61,7 @@ public class Main_2178 {
             Integer currentCount = queue.poll();
 
             if (x == width && y == height) {
-                result = currentCount;
-                break;
+                count = currentCount;
             }
 
             for (int dir = 0; dir < 4; dir++) {
@@ -88,6 +86,8 @@ public class Main_2178 {
                 queue.offer(currentCount + 1);
             }
         }
+
+        return count;
     }
 
     private static void output() {
