@@ -1,7 +1,9 @@
 package backtracking;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main_1182 {
 
@@ -33,15 +35,14 @@ public class Main_1182 {
     }
 
     private static void process() {
-        dfs(0, 0);
+        backtracking(0, 0);
 
-        // 아무것도 더하지 않은 공집합 제외
         if (targetNumber == 0) {
             result--;
         }
     }
 
-    private static void dfs(int index, int sum) {
+    private static void backtracking(int index, int sum) {
         if (index == lengthOfSequence) {
             if (sum == targetNumber) {
                 result++;
@@ -50,8 +51,8 @@ public class Main_1182 {
             return;
         }
 
-        dfs(index + 1, sum);
-        dfs(index + 1, sum + sequence[index]);
+        backtracking(index + 1, sum);
+        backtracking(index + 1, sum + sequence[index]);
     }
 
     private static void output() {
