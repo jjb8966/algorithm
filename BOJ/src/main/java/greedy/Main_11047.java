@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.StringTokenizer;
 
 public class Main_11047 {
@@ -36,18 +36,16 @@ public class Main_11047 {
     }
 
     private static void process() {
-        int count;
-        Arrays.sort(coins, Comparator.reverseOrder());
+        int money = targetPrice;
+        Arrays.sort(coins, Collections.reverseOrder());
 
-        for (int index = 0; index < coins.length; index++) {
-            if (targetPrice < coins[index]) {
-                continue;
+        for (int i = 0; i < numberOfCoin; i++) {
+            int count = money / coins[i];
+
+            if (count > 0) {
+                money -= count * coins[i];
+                result += count;
             }
-
-            count = targetPrice / coins[index];
-
-            result += count;
-            targetPrice -= count * coins[index];
         }
     }
 
