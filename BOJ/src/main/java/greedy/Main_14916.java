@@ -21,23 +21,6 @@ public class Main_14916 {
     }
 
     private static void process() {
-        int count5 = money / 5;
-
-        while (count5 >= 0) {
-            int remain = money - (count5 * 5);
-
-            if (remain % 2 == 0) {
-                result = count5 + (remain / 2);
-                return;
-            } else {
-                count5--;
-            }
-        }
-
-        result = -1;
-    }
-
-    private static void process2() {
         while (money >= 0) {
             if (money % 5 == 0) {
                 result += money / 5;
