@@ -80,7 +80,7 @@ public class Main_7569 {
             return;
         }
 
-        bfs();
+        result = bfs();
 
         if (!allVisit()) {
             result = -1;
@@ -101,15 +101,17 @@ public class Main_7569 {
         return true;
     }
 
-    private static void bfs() {
+    private static int bfs() {
+        int maxDay = 0;
+
         while (!queue.isEmpty()) {
             Tomato tomato = queue.poll();
             int x = tomato.x;
             int y = tomato.y;
             int z = tomato.z;
-            int day = tomato.day;
+            int currentDay = tomato.day;
 
-            result = Math.max(result, day);
+            maxDay = Math.max(maxDay, currentDay);
 
             for (int dir = 0; dir < 6; dir++) {
                 int newX = x + direction[dir][0];
@@ -125,9 +127,11 @@ public class Main_7569 {
                 }
 
                 visited[newX][newY][newZ] = true;
-                queue.offer(new Tomato(newX, newY, newZ, day + 1));
+                queue.offer(new Tomato(newX, newY, newZ, currentDay + 1));
             }
         }
+
+        return maxDay;
     }
 
     private static void output() {
