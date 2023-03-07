@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Comparator;
+import java.util.Collections;
 
 public class Main_1758 {
 
@@ -31,16 +31,16 @@ public class Main_1758 {
     }
 
     private static void process() {
-        Arrays.sort(tips, Comparator.reverseOrder());
+        Arrays.sort(tips, Collections.reverseOrder());
 
-        for (int order = 0; order < tips.length; order++) {
-            int money = tips[order] - order;
+        for (int order = 0; order < numberOfPeople; order++) {
+            int tip = tips[order] - order;
 
-            if (money <= 0) {
-                break;
+            if (tip <= 0) {
+                continue;
             }
 
-            result += money;
+            result += tip;
         }
     }
 
