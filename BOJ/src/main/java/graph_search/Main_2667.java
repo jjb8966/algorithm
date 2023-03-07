@@ -10,9 +10,8 @@ import java.util.Queue;
 public class Main_2667 {
 
     static int size;
-    static int count;
     static int[][] map;
-    static int[][] direction = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    static int[][] direction = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
     static boolean[][] visited;
     static StringBuilder sb = new StringBuilder();
     static ArrayList<Integer> result = new ArrayList<>();
@@ -41,8 +40,6 @@ public class Main_2667 {
     }
 
     private static void process() {
-        int countOfVillage = 0;
-
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
                 if (visited[x][y]) {
@@ -53,25 +50,22 @@ public class Main_2667 {
                     continue;
                 }
 
-                count = 0;
-                countOfVillage++;
-
-//                dfs(x, y);
-                bfs(x, y);
+//                int count = dfs(x, y);
+                int count = bfs(x, y);
 
                 result.add(count);
             }
         }
 
-        sb.append(countOfVillage).append('\n');
+        sb.append(result.size()).append('\n');
         result.stream()
                 .sorted()
                 .forEach(r -> sb.append(r).append('\n'));
     }
 
-    private static void dfs(int x, int y) {
+    private static int dfs(int x, int y) {
         visited[x][y] = true;
-        count++;
+        int count = 1;
 
         for (int dir = 0; dir < 4; dir++) {
             int newX = x + direction[dir][0];
@@ -89,12 +83,15 @@ public class Main_2667 {
                 continue;
             }
 
-            dfs(newX, newY);
+            count += dfs(newX, newY);
         }
+
+        return count;
     }
 
-    private static void bfs(int startX, int startY) {
+    private static int bfs(int startX, int startY) {
         Queue<Integer> queue = new LinkedList<>();
+        int count = 0;
 
         visited[startX][startY] = true;
         queue.offer(startX);
@@ -103,7 +100,6 @@ public class Main_2667 {
         while (!queue.isEmpty()) {
             Integer x = queue.poll();
             Integer y = queue.poll();
-
             count++;
 
             for (int dir = 0; dir < 4; dir++) {
@@ -127,6 +123,8 @@ public class Main_2667 {
                 queue.offer(newY);
             }
         }
+
+        return count;
     }
 
     private static void output() {
