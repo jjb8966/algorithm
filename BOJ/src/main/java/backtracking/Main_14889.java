@@ -10,7 +10,7 @@ public class Main_14889 {
     static int numberOfPeople;
     static int min = Integer.MAX_VALUE;
     static int[][] stats;
-    static boolean[] isTeamA;
+    static boolean[] isTeamStart;
 
     public static void main(String[] args) throws IOException {
         input();
@@ -24,95 +24,57 @@ public class Main_14889 {
 
         numberOfPeople = Integer.parseInt(br.readLine());
 
-        stats = new int[numberOfPeople + 1][numberOfPeople + 1];
-        isTeamA = new boolean[numberOfPeople + 1];
+        stats = new int[numberOfPeople][numberOfPeople];
+        isTeamStart = new boolean[numberOfPeople];
 
-        for (int y = 1; y <= numberOfPeople; y++) {
+        for (int y = 0; y < numberOfPeople; y++) {
             st = new StringTokenizer(br.readLine());
 
-            for (int x = 1; x <= numberOfPeople; x++) {
+            for (int x = 0; x < numberOfPeople; x++) {
                 stats[x][y] = Integer.parseInt(st.nextToken());
             }
         }
     }
 
     private static void process() {
-//        dfs(1,0);
-        dfs2(1, 0);
+        backtracking(0, 0);
     }
 
-    private static void dfs(int memberIndex, int countOfTeamA) {
-        if (countOfTeamA == (numberOfPeople / 2)) {
-            int teamAStats = 0;
-            int teamBStats = 0;
+    private static void backtracking(int member, int count) {
+        if (count == numberOfPeople / 2) {
+            int sumStart = 0;
+            int sumLink = 0;
 
-            for (int m1 = 1; m1 <= numberOfPeople; m1++) {
-                for (int m2 = 1; m2 <= numberOfPeople; m2++) {
+            for (int m1 = 0; m1 < numberOfPeople; m1++) {
+                for (int m2 = 0; m2 < numberOfPeople; m2++) {
                     if (m1 == m2) {
                         continue;
                     }
 
-                    if (isTeamA[m1] && isTeamA[m2]) {
-                        teamAStats += stats[m1][m2];
+                    if (isTeamStart[m1] && isTeamStart[m2]) {
+                        sumStart += stats[m1][m2];
                     }
 
-                    if (!isTeamA[m1] && !isTeamA[m2]) {
-                        teamBStats += stats[m1][m2];
-                    }
-                }
-            }
-
-            min = Math.min(min, Math.abs(teamAStats - teamBStats));
-
-            return;
-        }
-
-        if (memberIndex == numberOfPeople) {
-            return;
-        }
-
-        dfs(memberIndex + 1, countOfTeamA);
-
-        isTeamA[memberIndex] = true;
-        dfs(memberIndex + 1, countOfTeamA + 1);
-        isTeamA[memberIndex] = false;
-    }
-
-    private static void dfs2(int memberIndex, int count) {
-        if (count == (numberOfPeople / 2)) {
-            int teamAStats = 0;
-            int teamBStats = 0;
-
-            for (int m1 = 1; m1 <= numberOfPeople; m1++) {
-                for (int m2 = 1; m2 <= numberOfPeople; m2++) {
-                    if (m1 == m2) {
-                        continue;
-                    }
-
-                    if (isTeamA[m1] && isTeamA[m2]) {
-                        teamAStats += stats[m1][m2];
-                    }
-
-                    if (!isTeamA[m1] && !isTeamA[m2]) {
-                        teamBStats += stats[m1][m2];
+                    if (!isTeamStart[m1] && !isTeamStart[m2]) {
+                        sumLink += stats[m1][m2];
                     }
                 }
             }
 
-            min = Math.min(min, Math.abs(teamAStats - teamBStats));
+            min = Math.min(min, Math.abs(sumStart - sumLink));
 
             return;
         }
 
-        for (int index = memberIndex; index <= numberOfPeople; index++) {
-            if (isTeamA[index]) {
-                continue;
-            }
-
-            isTeamA[index] = true;
-            dfs2(index + 1, count + 1);
-            isTeamA[index] = false;
+        if (member == numberOfPeople) {
+            return;
         }
+
+        backtracking(member + 1, count);
+
+        isTeamStart[member] = true;
+        backtracking(member + 1, count + 1);
+        isTeamStart[member] = false;
     }
 
     private static void output() {
