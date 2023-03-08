@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 
 public class Main_1789 {
 
-    static long sumOfNumber;
+    static long targetNumber;
     static long result;
 
     public static void main(String[] args) throws IOException {
@@ -17,32 +17,14 @@ public class Main_1789 {
 
     private static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        sumOfNumber = Long.parseLong(br.readLine());
+        targetNumber = Long.parseLong(br.readLine());
     }
 
     private static void process() {
-//        binarySearch(1L, sumOfNumber);
-        binarySearch2(1L, sumOfNumber);
+        binarySearch(1, targetNumber);
     }
 
     private static void binarySearch(long min, long max) {
-        if (min > max) {
-            return;
-        }
-
-        long mid = (min + max) / 2;
-
-        if (isPossible(mid)) {
-            result = mid;
-            min = mid + 1;
-        } else {
-            max = mid - 1;
-        }
-
-        binarySearch(min, max);
-    }
-
-    private static void binarySearch2(long min, long max) {
         while (min <= max) {
             long mid = (min + max) / 2;
 
@@ -62,7 +44,10 @@ public class Main_1789 {
             sum += number;
         }
 
-        return sum <= sumOfNumber;
+        return sum <= targetNumber;
+
+        // 시간 초과
+        // return LongStream.range(1, count + 1).sum() <= targetNumber;
     }
 
     private static void output() {
