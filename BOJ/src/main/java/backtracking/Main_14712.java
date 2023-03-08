@@ -30,61 +30,29 @@ public class Main_14712 {
     }
 
     private static void process() {
-//        dfs(1, 1);
-        dfs2(0);
+        backtracking(1);
     }
 
-    private static void dfs(int x, int y) {
-        int newX;
-        int newY;
-
-        if (y > height) {
+    private static void backtracking(int count) {
+        if (count == (height * width) + 1) {
             result++;
             return;
         }
 
-        if (x < width) {
-            newX = x + 1;
-            newY = y;
-        } else {
-            newX = 1;
-            newY = y + 1;
-        }
-
-        // 2x2가 되는 경우 -> x,y는 채우지 않고 건너뜀
-        if (map[x - 1][y] == 1 && map[x - 1][y - 1] == 1 && map[x][y - 1] == 1) {
-            dfs(newX, newY);
-            return;
-        }
-
-        // 2x2가 안되는 경우
-        // 1. x,y 안채움
-        dfs(newX, newY);
-
-        // 2. x,y 채움
-        map[x][y] = 1;
-        dfs(newX, newY);
-        map[x][y] = 0;
-    }
-
-    static void dfs2(int count) {
-        if (count == height * width) {
-            result++;
-            return;
-        }
-
-        int x = count % width + 1;
-        int y = count / width + 1;
+        int x = (count - 1) % width + 1;
+        int y = (count - 1) / width + 1;
 
         if (map[x - 1][y] == 1 && map[x - 1][y - 1] == 1 && map[x][y - 1] == 1) {
-            dfs2(count + 1);
+            backtracking(count + 1);
             return;
         }
 
-        dfs2(count + 1);
+        // 칸을 채우지 않는 경우
+        backtracking(count + 1);
 
+        // 칸을 채우는 경우
         map[x][y] = 1;
-        dfs2(count + 1);
+        backtracking(count + 1);
         map[x][y] = 0;
     }
 
