@@ -42,26 +42,27 @@ public class Main_14889 {
 
     private static void backtracking(int member, int count) {
         if (count == numberOfPeople / 2) {
-            int sumStart = 0;
-            int sumLink = 0;
+            int sumOfStart = 0;
+            int sumOfLink = 0;
 
-            for (int m1 = 0; m1 < numberOfPeople; m1++) {
-                for (int m2 = 0; m2 < numberOfPeople; m2++) {
-                    if (m1 == m2) {
+            for (int y = 0; y < numberOfPeople; y++) {
+                for (int x = 0; x < numberOfPeople; x++) {
+                    if (x == y) {
                         continue;
                     }
 
-                    if (isTeamStart[m1] && isTeamStart[m2]) {
-                        sumStart += stats[m1][m2];
+                    if (isTeamStart[x] && isTeamStart[y]) {
+                        sumOfStart += stats[x][y];
                     }
 
-                    if (!isTeamStart[m1] && !isTeamStart[m2]) {
-                        sumLink += stats[m1][m2];
+                    if (!isTeamStart[x] && !isTeamStart[y]) {
+                        sumOfLink += stats[x][y];
                     }
                 }
             }
 
-            min = Math.min(min, Math.abs(sumStart - sumLink));
+            int gap = Math.abs(sumOfStart - sumOfLink);
+            min = Math.min(min, gap);
 
             return;
         }
