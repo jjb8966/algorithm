@@ -1,59 +1,63 @@
 package graph_search;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main_2606 {
 
-    static int numberOfComputer;
-    static int numberOfPair;
-    static int result;
-    static boolean[] visited;
-    static ArrayList<Integer>[] adjacencyList;
-
     public static void main(String[] args) throws IOException {
-        input();
-        process();
-        output();
-    }
-
-    private static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
+        int numberOfComputer = Integer.parseInt(br.readLine());
+        int numberOfPair = Integer.parseInt(br.readLine());
+        boolean[] visited = new boolean[numberOfComputer + 1];
+        List[] adjacenyList = new List[numberOfComputer + 1];
 
-        numberOfComputer = Integer.parseInt(br.readLine());
-        numberOfPair = Integer.parseInt(br.readLine());
-
-        visited = new boolean[numberOfComputer + 1];
-        adjacencyList = new ArrayList[numberOfComputer + 1];
-
-        for (int i = 1; i <= numberOfComputer; i++) {
-            adjacencyList[i] = new ArrayList<>();
+        // init
+        for (int number = 1; number <= numberOfComputer; number++) {
+            adjacenyList[number] = new ArrayList<>();
         }
 
-        for (int i = 0; i < numberOfPair; i++) {
-            st = new StringTokenizer(br.readLine());
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
+        for (int number = 1; number <= numberOfPair; number++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
 
-            adjacencyList[a].add(b);
-            adjacencyList[b].add(a);
+            int firstVertex = Integer.parseInt(st.nextToken());
+            int secondVertex = Integer.parseInt(st.nextToken());
+
+            adjacenyList[firstVertex].add(secondVertex);
+            adjacenyList[secondVertex].add(firstVertex);
         }
 
+        // process
+        int result = dfs(1, visited, adjacenyList) - 1;
+//        int result = bfs(1, visited, adjacenyList);
+
+        // output
+        System.out.println(result);
     }
 
-    private static void process() {
-//        bfs(1);
-        dfs(1);
+    private static int dfs(int vertex,
+                           boolean[] visited,
+                           List<Integer>[] adjacenyList) {
+        int count = 1;
+
+        visited[vertex] = true;
+
+        for (Integer connectVertex : adjacenyList[vertex]) {
+            if (visited[connectVertex]) {
+                continue;
+            }
+
+            count += dfs(connectVertex, visited, adjacenyList);
+        }
+
+        return count;
     }
 
-    private static void bfs(int start) {
+    private static int bfs(int start,
+                           boolean[] visited,
+                           List<Integer>[] adjacenyList) {
         Queue<Integer> queue = new LinkedList<>();
+        int result = 0;
 
         visited[start] = true;
         queue.offer(start);
@@ -61,33 +65,18 @@ public class Main_2606 {
         while (!queue.isEmpty()) {
             Integer vertex = queue.poll();
 
-            for (Integer nextVertex : adjacencyList[vertex]) {
-                if (visited[nextVertex]) {
+            for (Integer connectVertex : adjacenyList[vertex]) {
+                if (visited[connectVertex]) {
                     continue;
                 }
 
+                visited[connectVertex] = true;
                 result++;
-                visited[nextVertex] = true;
-                queue.offer(nextVertex);
+                queue.add(connectVertex);
             }
         }
-    }
 
-    private static void dfs(int vertex) {
-        visited[vertex] = true;
-
-        for (Integer nextVertex : adjacencyList[vertex]) {
-            if (visited[nextVertex]) {
-                continue;
-            }
-
-            result++;
-            dfs(nextVertex);
-        }
-    }
-
-    private static void output() {
-        System.out.println(result);
+        return result;
     }
 
 }
