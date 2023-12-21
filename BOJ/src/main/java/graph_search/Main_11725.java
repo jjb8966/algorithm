@@ -3,95 +3,83 @@ package graph_search;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main_11725 {
 
-    static int numberOfVertex;
-    static int[] parent;
-    static boolean[] visited;
-    static ArrayList<Integer>[] adList;
-    static StringBuilder sb = new StringBuilder();
-
     public static void main(String[] args) throws IOException {
-        input();
-        process();
-        output();
-    }
-
-    private static void input() throws IOException {
+        // init
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
 
-        numberOfVertex = Integer.parseInt(br.readLine());
+        int numberOfNode = Integer.parseInt(br.readLine());
+        int numberOfPair = numberOfNode - 1;
+        int[] parent = new int[numberOfNode + 1];
+        boolean[] visited = new boolean[numberOfNode + 1];
+        List<Integer>[] adjacencyList = new List[numberOfNode + 1];
 
-        visited = new boolean[numberOfVertex + 1];
-        adList = new ArrayList[numberOfVertex + 1];
-        parent = new int[numberOfVertex + 1];
-
-        for (int i = 1; i <= numberOfVertex; i++) {
-            adList[i] = new ArrayList<>();
+        for (int i = 0; i < numberOfNode + 1; i++) {
+            adjacencyList[i] = new ArrayList();
         }
 
-        for (int i = 0; i < numberOfVertex - 1; i++) {
+        StringTokenizer st;
+        for (int i = 0; i < numberOfPair; i++) {
             st = new StringTokenizer(br.readLine());
+
             int a = Integer.parseInt(st.nextToken());
             int b = Integer.parseInt(st.nextToken());
 
-            adList[a].add(b);
-            adList[b].add(a);
+            adjacencyList[a].add(b);
+            adjacencyList[b].add(a);
         }
 
-    }
+        // process
+//        dfs(1, parent, visited, adjacencyList);
+        bfs(1, parent, visited, adjacencyList);
 
-    private static void process() {
-//        bfs(1);
-        dfs(1);
-
-        for (int i = 2; i <= numberOfVertex; i++) {
-            sb.append(parent[i]).append('\n');
+        // output
+        for (int vertex = 2; vertex <= numberOfNode; vertex++) {
+            System.out.println(parent[vertex]);
         }
     }
 
-    private static void bfs(int start) {
+    private static void dfs(int vertex,
+                            int[] parent,
+                            boolean[] visited,
+                            List<Integer>[] adjacencyList) {
+        visited[vertex] = true;
+
+        for (Integer connectVertex : adjacencyList[vertex]) {
+            if (visited[connectVertex]) {
+                continue;
+            }
+
+            visited[connectVertex] = true;
+            parent[connectVertex] = vertex;
+            dfs(connectVertex, parent, visited, adjacencyList);
+        }
+    }
+
+    private static void bfs(int startVertex,
+                            int[] parent,
+                            boolean[] visited,
+                            List<Integer>[] adjacencyList) {
         Queue<Integer> queue = new LinkedList<>();
 
-        visited[start] = true;
-        queue.offer(start);
+        visited[startVertex] = true;
+        queue.offer(startVertex);
 
         while (!queue.isEmpty()) {
             Integer vertex = queue.poll();
 
-            for (Integer nextVertex : adList[vertex]) {
-                if (visited[nextVertex]) {
+            for (Integer connectVertex : adjacencyList[vertex]) {
+                if (visited[connectVertex]) {
                     continue;
                 }
 
-                parent[nextVertex] = vertex;
-                visited[nextVertex] = true;
-                queue.offer(nextVertex);
+                visited[connectVertex] = true;
+                parent[connectVertex] = vertex;
+                queue.offer(connectVertex);
             }
         }
     }
-
-    private static void dfs(int vertex) {
-        visited[vertex] = true;
-
-        for (Integer nextVertex : adList[vertex]) {
-            if (visited[nextVertex]) {
-                continue;
-            }
-
-            parent[nextVertex] = vertex;
-            dfs(nextVertex);
-        }
-    }
-
-    private static void output() {
-        System.out.println(sb);
-    }
-
 }
