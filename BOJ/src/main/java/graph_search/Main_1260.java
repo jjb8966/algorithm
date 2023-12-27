@@ -1,100 +1,90 @@
 package graph_search;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
 public class Main_1260 {
 
-    static int numberOfVertex;
-    static int numberOfEdge;
-    static int startVertex;
-    static boolean[] visited;
-    static ArrayList<Integer>[] adList;
-    static StringBuilder sb = new StringBuilder();
-
     public static void main(String[] args) throws IOException {
-        input();
-        process();
-        output();
-    }
-
-    private static void input() throws IOException {
+        // init
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
-
+        StringBuilder result = new StringBuilder();
+        
         st = new StringTokenizer(br.readLine());
-        numberOfVertex = Integer.parseInt(st.nextToken());
-        numberOfEdge = Integer.parseInt(st.nextToken());
-        startVertex = Integer.parseInt(st.nextToken());
+        int numberOfVertex = Integer.parseInt(st.nextToken());
+        int numberOfEdge = Integer.parseInt(st.nextToken());
+        int startVertex = Integer.parseInt(st.nextToken());
+        
+        List<Integer>[] adjacencyList = new List[numberOfVertex + 1];
+        boolean[] visited = new boolean[numberOfVertex + 1];
 
-        visited = new boolean[numberOfVertex + 1];
-        adList = new ArrayList[numberOfVertex + 1];
-
-        for (int i = 1; i <= numberOfVertex; i++) {
-            adList[i] = new ArrayList<>();
+        for (int vertex = 1; vertex <= numberOfVertex; vertex++) {
+            adjacencyList[vertex] = new ArrayList<>();
         }
-
+        
         for (int i = 0; i < numberOfEdge; i++) {
             st = new StringTokenizer(br.readLine());
             int a = Integer.parseInt(st.nextToken());
             int b = Integer.parseInt(st.nextToken());
 
-            adList[a].add(b);
-            adList[b].add(a);
+            adjacencyList[a].add(b);
+            adjacencyList[b].add(a);
         }
+
+        // - adjacencyList 정렬
+        for (int vertex = 1; vertex <= numberOfVertex; vertex++) {
+            adjacencyList[vertex].sort((o1, o2) -> o1 - o2);
+        }
+
+        // process
+        dfs(result, startVertex, adjacencyList, visited);
+        Arrays.fill(visited, false);
+        bfs(result, startVertex, adjacencyList, visited);
+
+        // output
+        System.out.println(result);
     }
 
-    private static void process() {
-        Arrays.stream(adList)
-                .filter(Objects::nonNull)
-                .forEach(Collections::sort);
-
-        dfs(startVertex);
-
-        sb.append('\n');
-
-        bfs(startVertex);
-    }
-
-    private static void dfs(int vertex) {
+    private static void dfs(StringBuilder result,
+                            int vertex,
+                            List<Integer>[] adjacencyList, 
+                            boolean[] visited) {
         visited[vertex] = true;
-        sb.append(vertex).append(" ");
+        result.append(vertex).append(" ");
 
-        for (Integer nextVertex : adList[vertex]) {
-            if (visited[nextVertex]) {
+        for (Integer connectVertex : adjacencyList[vertex]) {
+            if (visited[connectVertex]) {
                 continue;
             }
 
-            dfs(nextVertex);
+            visited[connectVertex] = true;
+            dfs(result, connectVertex, adjacencyList, visited);
         }
     }
 
-    private static void bfs(int start) {
+    private static void bfs(StringBuilder result,
+                            int startVertex,
+                            List<Integer>[] adjacencyList,
+                            boolean[] visited) {
         Queue<Integer> queue = new LinkedList<>();
-        visited = new boolean[numberOfVertex + 1];
+        result.append('\n');
 
-        visited[start] = true;
-        queue.offer(start);
+        visited[startVertex] = true;
+        queue.offer(startVertex);
 
         while (!queue.isEmpty()) {
             Integer vertex = queue.poll();
-            sb.append(vertex).append(" ");
+            result.append(vertex).append(" ");
 
-            for (Integer nextVertex : adList[vertex]) {
-                if (visited[nextVertex]) {
+            for (Integer connectVertex : adjacencyList[vertex]) {
+                if (visited[connectVertex]) {
                     continue;
                 }
 
-                visited[nextVertex] = true;
-                queue.offer(nextVertex);
+                visited[connectVertex] = true;
+                queue.offer(connectVertex);
             }
         }
     }
-
-    private static void output() {
-        System.out.println(sb);
-    }
-
 }
