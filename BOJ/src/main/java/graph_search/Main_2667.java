@@ -1,69 +1,66 @@
 package graph_search;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.io.*;
+import java.util.*;
 
 public class Main_2667 {
 
-    static int size;
-    static int[][] map;
-    static int[][] direction = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-    static boolean[][] visited;
-    static StringBuilder sb = new StringBuilder();
-    static ArrayList<Integer> result = new ArrayList<>();
-
     public static void main(String[] args) throws IOException {
-        input();
-        process();
-        output();
-    }
-
-    private static void input() throws IOException {
+        // init
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int size = Integer.parseInt(br.readLine());
 
-        size = Integer.parseInt(br.readLine());
-
-        map = new int[size][size];
-        visited = new boolean[size][size];
-
-        for (int y = 0; y < size; y++) {
+        int[][] map = new int[size + 1][size + 1];
+        for (int y = 1; y <= size; y++) {
             String[] row = br.readLine().split("");
 
-            for (int x = 0; x < size; x++) {
-                map[x][y] = Integer.parseInt(row[x]);
-            }
-        }
-    }
-
-    private static void process() {
-        for (int y = 0; y < size; y++) {
-            for (int x = 0; x < size; x++) {
-                if (visited[x][y]) {
-                    continue;
-                }
-
-                if (map[x][y] == 0) {
-                    continue;
-                }
-
-//                int count = dfs(x, y);
-                int count = bfs(x, y);
-
-                result.add(count);
+            for (int x = 1; x <= size; x++) {
+                map[x][y] = Integer.parseInt(row[x - 1]);
             }
         }
 
-        sb.append(result.size()).append('\n');
-        result.stream()
+        boolean[][] visited = new boolean[size + 1][size + 1];
+        int[][] direction = {
+                {0, 1},
+                {0, -1},
+                {1, 0},
+                {-1, 0}
+        };
+
+        // process
+        int numberOfVillage = 1;
+        Map<Integer, Integer> resultMap = new HashMap<>();
+
+        for (int y = 1; y <= size; y++) {
+            for (int x = 1; x <= size; x++) {
+                if (map[x][y] == 1 && !visited[x][y]) {
+//                    int countOfHouse = dfs(x, y, size, map, visited, direction);
+                    int countOfHouse = bfs(x, y, size, map, visited, direction);
+                    resultMap.put(numberOfVillage, countOfHouse);
+                    numberOfVillage++;
+                }
+            }
+        }
+
+        // output
+        System.out.println(--numberOfVillage);
+
+        List<Integer> resultList = new ArrayList<>();
+
+        for (int village = 1; village <= numberOfVillage; village++) {
+            resultList.add(resultMap.get(village));
+        }
+        resultList.stream()
                 .sorted()
-                .forEach(r -> sb.append(r).append('\n'));
+                .forEach(System.out::println);
     }
 
-    private static int dfs(int x, int y) {
+    private static int dfs(int x,
+                           int y,
+                           int size,
+                           int[][] map,
+                           boolean[][] visited,
+                           int[][] direction) {
         visited[x][y] = true;
         int count = 1;
 
@@ -71,7 +68,7 @@ public class Main_2667 {
             int newX = x + direction[dir][0];
             int newY = y + direction[dir][1];
 
-            if (newX < 0 || newY < 0 || newX >= size || newY >= size) {
+            if (newX <= 0 || newX > size || newY <= 0 || newY > size) {
                 continue;
             }
 
@@ -79,17 +76,21 @@ public class Main_2667 {
                 continue;
             }
 
-            if (map[newX][newY] == 0) {
-                continue;
+            if (map[newX][newY] == 1) {
+                visited[newX][newY] = true;
+                count += dfs(newX, newY, size, map, visited, direction);
             }
-
-            count += dfs(newX, newY);
         }
 
         return count;
     }
 
-    private static int bfs(int startX, int startY) {
+    private static int bfs(int startX,
+                           int startY,
+                           int size,
+                           int[][] map,
+                           boolean[][] visited,
+                           int[][] direction) {
         Queue<Integer> queue = new LinkedList<>();
         int count = 0;
 
@@ -106,7 +107,7 @@ public class Main_2667 {
                 int newX = x + direction[dir][0];
                 int newY = y + direction[dir][1];
 
-                if (newX < 0 || newY < 0 || newX >= size || newY >= size) {
+                if (newX <= 0 || newX > size || newY <= 0 || newY > size) {
                     continue;
                 }
 
@@ -114,21 +115,14 @@ public class Main_2667 {
                     continue;
                 }
 
-                if (map[newX][newY] == 0) {
-                    continue;
+                if (map[newX][newY] == 1) {
+                    visited[newX][newY] = true;
+                    queue.offer(newX);
+                    queue.offer(newY);
                 }
-
-                visited[newX][newY] = true;
-                queue.offer(newX);
-                queue.offer(newY);
             }
         }
 
         return count;
     }
-
-    private static void output() {
-        System.out.println(sb);
-    }
-
 }
