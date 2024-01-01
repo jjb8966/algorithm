@@ -1,141 +1,117 @@
 package graph_search;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main_7569 {
 
-    static int width;
-    static int height;
-    static int layer;
-    static int result;
-    static int[][][] map;
-    static int[][] direction = {
-            {0, 0, 1}, {0, 0, -1},      // 위, 아래
-            {1, 0, 0}, {-1, 0, 0},      // 오른쪽, 왼쪽
-            {0, 1, 0}, {0, -1, 0}       // 앞, 뒤
-    };
-    static boolean[][][] visited;
-    static Queue<Tomato> queue = new LinkedList<>();
-
-    static class Tomato {
-        int x;
-        int y;
-        int z;
-        int day;
-
-        public Tomato(int x, int y, int z, int day) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            this.day = day;
-        }
-    }
-
     public static void main(String[] args) throws IOException {
-        input();
-        process();
-        output();
-    }
-
-    private static void input() throws IOException {
+        // init
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
 
         st = new StringTokenizer(br.readLine());
-        width = Integer.parseInt(st.nextToken());
-        height = Integer.parseInt(st.nextToken());
-        layer = Integer.parseInt(st.nextToken());
+        int width = Integer.parseInt(st.nextToken());
+        int height = Integer.parseInt(st.nextToken());
+        int depth = Integer.parseInt(st.nextToken());
 
-        map = new int[width][height][layer];
-        visited = new boolean[width][height][layer];
+        int day = 0;
+        int[][][] map = new int[depth][width][height];
+        int[][] direction = {
+                {0, 0 ,1},
+                {0, 0 ,-1},
+                {0, 1, 0},
+                {0, -1, 0},
+                {1, 0, 0},
+                {-1, 0, 0}
+        };
 
-        for (int z = 0; z < layer; z++) {
+        for (int z = 0; z < depth; z++) {
             for (int y = 0; y < height; y++) {
                 st = new StringTokenizer(br.readLine());
-
                 for (int x = 0; x < width; x++) {
-                    map[x][y][z] = Integer.parseInt(st.nextToken());
-
-                    if (map[x][y][z] == 1) {
-                        visited[x][y][z] = true;
-                        queue.offer(new Tomato(x, y, z, 0));
-                    }
-
-                    if (map[x][y][z] == -1) {
-                        visited[x][y][z] = true;
-                    }
+                    map[z][x][y] = Integer.parseInt(st.nextToken());
                 }
             }
         }
-    }
 
-    private static void process() {
-        if (allVisit()) {
-            result = 0;
+        // process
+        if (allVisit(map)) {
+            System.out.println(day);
             return;
         }
 
-        result = bfs();
+        day = bfs(width, height, depth, map, direction);
 
-        if (!allVisit()) {
-            result = -1;
+        if (!allVisit(map)) {
+            System.out.println(-1);
+            return;
         }
+
+        // output
+        System.out.println(day);
     }
 
-    private static boolean allVisit() {
-        for (int z = 0; z < layer; z++) {
+    private static boolean allVisit(int[][][] map) {
+        return Arrays.stream(map)
+                .flatMap(Arrays::stream)
+                .flatMapToInt(Arrays::stream)
+                .noneMatch(tomato -> tomato == 0);
+    }
+
+    private static int bfs(int width,
+                           int height,
+                           int depth,
+                           int[][][] map,
+                           int[][] direction) {
+        Queue<Integer> queue = new LinkedList<>();
+        int maxDay = 0;
+
+        for (int z = 0; z < depth; z++) {
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
-                    if (!visited[x][y][z]) {
-                        return false;
+                    if (map[z][x][y] == 1) {
+                        queue.offer(x);
+                        queue.offer(y);
+                        queue.offer(z);
+                        queue.offer(0);
                     }
                 }
             }
         }
 
-        return true;
-    }
-
-    private static int bfs() {
-        int maxDay = 0;
-
         while (!queue.isEmpty()) {
-            Tomato tomato = queue.poll();
-            int x = tomato.x;
-            int y = tomato.y;
-            int z = tomato.z;
-            int currentDay = tomato.day;
-
-            maxDay = Math.max(maxDay, currentDay);
+            Integer x = queue.poll();
+            Integer y = queue.poll();
+            Integer z = queue.poll();
+            Integer currentDay = queue.poll();
 
             for (int dir = 0; dir < 6; dir++) {
                 int newX = x + direction[dir][0];
                 int newY = y + direction[dir][1];
                 int newZ = z + direction[dir][2];
 
-                if (newX < 0 || newY < 0 || newZ < 0 || newX >= width || newY >= height || newZ >= layer) {
+                if (newX < 0 || newX >= width ||
+                        newY < 0 || newY >= height ||
+                        newZ < 0 || newZ >= depth) {
                     continue;
                 }
 
-                if (visited[newX][newY][newZ]) {
+                if (map[newZ][newX][newY] == 1 || map[newZ][newX][newY] == -1) {
                     continue;
                 }
 
-                visited[newX][newY][newZ] = true;
-                queue.offer(new Tomato(newX, newY, newZ, currentDay + 1));
+                int nextDay = currentDay + 1;
+                map[newZ][newX][newY] = 1;
+                queue.offer(newX);
+                queue.offer(newY);
+                queue.offer(newZ);
+                queue.offer(nextDay);
+
+                maxDay = Math.max(maxDay, nextDay);
             }
         }
 
         return maxDay;
     }
-
-    private static void output() {
-        System.out.println(result);
-    }
-
 }
