@@ -6,52 +6,57 @@ import java.io.InputStreamReader;
 
 public class Main_1789 {
 
-    static long targetNumber;
-    static long result;
-
     public static void main(String[] args) throws IOException {
-        input();
-        process();
-        output();
-    }
-
-    private static void input() throws IOException {
+        // init
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        targetNumber = Long.parseLong(br.readLine());
+        long sumOfNumber = Long.parseLong(br.readLine());
+
+        // process
+//        long result = binarySearch(1L, sumOfNumber, sumOfNumber, 1L);
+        long result = binarySearch2(1L, sumOfNumber);
+
+        // output
+        System.out.println(result);
     }
 
-    private static void process() {
-        binarySearch(1, targetNumber);
-    }
+//    private static long binarySearch(long min, long max, long sumOfNumber, long result) {
+//        long mid = (min + max) / 2;
+//
+//        if(isPossible(mid, sumOfNumber)) {
+//            result = mid;
+//            min = mid + 1;
+//        } else {
+//            max = mid - 1;
+//        }
+//
+//        if (min > max) {
+//            return result;
+//        }
+//
+//        return binarySearch(min, max, sumOfNumber, result);
+//    }
 
-    private static void binarySearch(long min, long max) {
+    private static long binarySearch2(long min, long sumOfNumber) {
+        long result = 0;
+        long max = sumOfNumber;
+
         while (min <= max) {
             long mid = (min + max) / 2;
 
-            if (isPossible(mid)) {
+            if (isPossible(mid, sumOfNumber)) {
                 result = mid;
                 min = mid + 1;
             } else {
                 max = mid - 1;
             }
         }
+
+        return result;
     }
 
-    private static boolean isPossible(long count) {
-        long sum = 0;
+    private static boolean isPossible(long mid, long sumOfNumber) {
+        long sum = (1 + mid) * mid / 2;
 
-        for (long number = 1; number <= count; number++) {
-            sum += number;
-        }
-
-        return sum <= targetNumber;
-
-        // 시간 초과
-        // return LongStream.range(1, count + 1).sum() <= targetNumber;
+        return sum <= sumOfNumber;
     }
-
-    private static void output() {
-        System.out.println(result);
-    }
-
 }
