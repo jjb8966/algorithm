@@ -1,69 +1,63 @@
 package binary_search;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main_2512 {
 
-    static int numberOfRegions;
-    static int totalBudget;
-    static int result;
-    static int[] budgets;
-
     public static void main(String[] args) throws IOException {
-        input();
-        process();
-        output();
-    }
-
-    private static void input() throws IOException {
+        // init
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
-
-        numberOfRegions = Integer.parseInt(br.readLine());
-
-        budgets = new int[numberOfRegions];
+        int numberOfRequest = Integer.parseInt(br.readLine());
+        int[] requests = new int[numberOfRequest];
+        int budget = 0;
+        int max = 0;
+        int result = 0;
 
         st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < numberOfRegions; i++) {
-            budgets[i] = Integer.parseInt(st.nextToken());
+        for (int i = 0; i < numberOfRequest; i++) {
+            requests[i] = Integer.parseInt(st.nextToken());
+            max = Math.max(max, requests[i]);
         }
 
-        totalBudget = Integer.parseInt(br.readLine());
+        budget = Integer.parseInt(br.readLine());
+
+        // process
+        result = binarySearch(1, max, requests, budget);
+
+        // output
+        System.out.println(result);
     }
 
-    private static void process() {
-        int max = Arrays.stream(budgets).max().getAsInt();
+    private static int binarySearch(int min, int max, int[] requests, int budget) {
+        int result = 0;
 
-        binarySearch(1, max);
-    }
-
-    private static void binarySearch(int min, int max) {
         while (min <= max) {
             int mid = (min + max) / 2;
 
-            if (isPossible(mid)) {
+            if (isPossible(mid, requests, budget)) {
                 result = mid;
                 min = mid + 1;
             } else {
                 max = mid - 1;
             }
         }
+
+        return result;
     }
 
-    private static boolean isPossible(int maxBudget) {
-        int sum = Arrays.stream(budgets)
-                .map(budget -> Math.min(budget, maxBudget))
-                .sum();
+    private static boolean isPossible(int mid, int[] requests, int budget) {
+        int sum = 0;
 
-        return sum <= totalBudget;
+        for (int request : requests) {
+            if (request > mid) {
+                sum += mid;
+            } else {
+                sum += request;
+            }
+        }
+
+        return sum <= budget;
     }
-
-    private static void output() {
-        System.out.println(result);
-    }
-
 }
