@@ -9,132 +9,110 @@ import java.util.StringTokenizer;
 
 public class Main_2578 {
 
-    static int countBingo = 0;
-    static int result;
-    static int[] call = new int[25];
-    static boolean[] row = new boolean[6];
-    static boolean[] column = new boolean[6];
-    static boolean[] diagonal = new boolean[2];
-    static boolean[][] check = new boolean[6][6];
-    static Map<Integer, int[]> numberMap = new HashMap<>();
-
     public static void main(String[] args) throws IOException {
-        input();
-        process();
-        output();
-    }
+        // init
+        Map<Integer, int[]> numberMap = new HashMap<>();
+        int[] callNumber = new int[25];
 
-    private static void input() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
 
-        for (int y = 1; y <= 5; y++) {
+        for (int x = 0; x < 5; x++) {
             st = new StringTokenizer(br.readLine());
 
-            for (int x = 1; x <= 5; x++) {
+            for (int y = 0; y < 5; y++) {
                 int number = Integer.parseInt(st.nextToken());
                 numberMap.put(number, new int[]{x, y});
             }
         }
 
         int index = 0;
-
         for (int i = 0; i < 5; i++) {
             st = new StringTokenizer(br.readLine());
 
             for (int j = 0; j < 5; j++) {
-                call[index++] = Integer.parseInt(st.nextToken());
+                callNumber[index++] = Integer.parseInt(st.nextToken());
             }
         }
-    }
 
-    private static void process() {
+        // process
+        boolean[][] isCheck = new boolean[5][5];
+        int result = 0;
+        int countBingo = 0;
+
         for (int i = 0; i < 25; i++) {
-            if (countBingo >= 3) {
-                result = i;
-                return;
-            }
-
-            int[] coordinate = numberMap.get(call[i]);
+            int number = callNumber[i];
+            int[] coordinate = numberMap.get(number);
             int x = coordinate[0];
             int y = coordinate[1];
 
-            check[x][y] = true;
+            isCheck[x][y] = true;
 
-            checkBingo(x, y);
-        }
-    }
+            countBingo += checkBingGo(isCheck, x, y);
 
-    private static void checkBingo(int x, int y) {
-        if (!column[x]) {
-            checkColumn(x);
-        }
-
-        if (!row[y]) {
-            checkRow(y);
-        }
-
-        if (x == y && !diagonal[0]) {
-            checkLeftDiagonal();
-        }
-
-        if ((x + y) == 6 && !diagonal[1]) {
-            checkRightDiagonal();
-        }
-    }
-
-    private static void checkColumn(int x) {
-        for (int y = 1; y <= 5; y++) {
-            if (!check[x][y]) {
-                return;
+            if (countBingo >= 3) {
+                result = i;
+                break;
             }
         }
 
-        countBingo++;
-        column[x] = true;
+        // output
+        System.out.println(result + 1);
     }
 
-    private static void checkRow(int y) {
-        for (int x = 1; x <= 5; x++) {
-            if (!check[x][y]) {
-                return;
+    static int checkBingGo(boolean[][] isCheck, int checkedX, int checkedY) {
+        int countBingo = 4;
+
+        // check row
+        for (int y = 0; y < 5; y++) {
+            if (!isCheck[checkedX][y]) {
+                countBingo--;
+                break;
             }
         }
 
-        countBingo++;
-        row[y] = true;
-    }
-
-    private static void checkLeftDiagonal() {
-        for (int n = 1; n <= 5; n++) {
-            if (!check[n][n]) {
-                return;
+        // check column
+        for (int x = 0; x < 5; x++) {
+            if (!isCheck[x][checkedY]) {
+                countBingo--;
+                break;
             }
         }
 
-        countBingo++;
-        diagonal[0] = true;
-    }
+        int x = 0;
+        int y = 0;
+        // check left diagonal
+        if (checkedX == checkedY) {
+            for (int i = 0; i < 5; i++) {
+                if (!isCheck[x][y]) {
+                    countBingo--;
+                    break;
+                }
 
-    private static void checkRightDiagonal() {
-        int x = 1;
-        int y = 5;
-
-        for (int i = 0; i < 4; i++) {
-            if (!check[x][y]) {
-                return;
+                x++;
+                y++;
             }
-
-            x++;
-            y--;
+        } else {
+            countBingo--;
         }
 
-        countBingo++;
-        diagonal[1] = true;
-    }
+        x = 0;
+        y = 4;
+        // check right diagonal
+        if (checkedX + checkedY == 4) {
+            for (int i = 0; i < 5; i++) {
+                if (!isCheck[x][y]) {
+                    countBingo--;
+                    break;
+                }
 
-    private static void output() {
-        System.out.println(result);
-    }
+                x++;
+                y--;
+            }
+        } else {
+            countBingo--;
+        }
 
+        return countBingo;
+    }
 }
