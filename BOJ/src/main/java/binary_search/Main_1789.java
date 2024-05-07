@@ -12,32 +12,14 @@ public class Main_1789 {
         long sumOfNumber = Long.parseLong(br.readLine());
 
         // process
-//        long result = binarySearch(1L, sumOfNumber, sumOfNumber, 1L);
-        long result = binarySearch2(1L, sumOfNumber);
+        long result = binarySearch(1L, sumOfNumber);
 
         // output
         System.out.println(result);
     }
 
-//    private static long binarySearch(long min, long max, long sumOfNumber, long result) {
-//        long mid = (min + max) / 2;
-//
-//        if(isPossible(mid, sumOfNumber)) {
-//            result = mid;
-//            min = mid + 1;
-//        } else {
-//            max = mid - 1;
-//        }
-//
-//        if (min > max) {
-//            return result;
-//        }
-//
-//        return binarySearch(min, max, sumOfNumber, result);
-//    }
-
-    private static long binarySearch2(long min, long sumOfNumber) {
-        long result = 0;
+    private static long binarySearch(long min, long sumOfNumber) {
+        long result = 0L;
         long max = sumOfNumber;
 
         while (min <= max) {
