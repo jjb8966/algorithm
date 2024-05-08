@@ -1,85 +1,72 @@
 package binary_search;
 
+import java.util.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.StringTokenizer;
 
 public class Main_1920 {
 
-    private static int numberOfSequence;
-    private static int numberOfFindNumber;
-    private static int[] sequence;
-    private static int[] findNumbers;
-    private static int[] result;
-
     public static void main(String[] args) throws IOException {
-        input();
-        process();
-        output();
-    }
-
-    private static void input() throws IOException {
+        // init
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
 
-        numberOfSequence = Integer.parseInt(br.readLine());
-
-        sequence = new int[numberOfSequence];
+        int numberOfSequence = Integer.parseInt(br.readLine());
+        int[] sequence = new int[numberOfSequence];
 
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < numberOfSequence; i++) {
             sequence[i] = Integer.parseInt(st.nextToken());
         }
 
-        numberOfFindNumber = Integer.parseInt(br.readLine());
-
-        findNumbers = new int[numberOfFindNumber];
-        result = new int[numberOfFindNumber];
+        int numberOfFindNumber = Integer.parseInt(br.readLine());
+        int[] findNumbers = new int[numberOfFindNumber];
+        int[] results = new int[numberOfFindNumber];
 
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < numberOfFindNumber; i++) {
             findNumbers[i] = Integer.parseInt(st.nextToken());
         }
-    }
 
-    private static void process() {
+        // process
         Arrays.sort(sequence);
 
-        for (int targetIndex = 0; targetIndex < numberOfFindNumber; targetIndex++) {
-            binarySearch(0, numberOfSequence - 1, targetIndex);
+        for (int i = 0; i < numberOfFindNumber; i++) {
+            int findNumber = findNumbers[i];
+
+            if (isExist(sequence, findNumber)) {
+                results[i] = 1;
+            } else {
+                results[i] = 0;
+            }
         }
+
+        // output
+        Arrays.stream(results).forEach(System.out::println);
     }
 
-    private static void binarySearch(int start, int end, int targetIndex) {
-        int mid = (start + end) / 2;
-        int currentNumber = sequence[mid];
-        int targetNumber = findNumbers[targetIndex];
+    private static boolean isExist(int[] sequence, int findNumber) {
+        int min = 0;
+        int max = sequence.length - 1;
 
-        if (start > end) {
-            return;
+        while (min <= max) {
+            int mid = (min + max) / 2;
+            int number = sequence[mid];
+
+            if (number == findNumber) {
+                return true;
+            }
+
+            if (number < findNumber) {
+                min = mid + 1;
+            }
+
+            if (number > findNumber) {
+                max = mid - 1;
+            }
         }
 
-        if (currentNumber == targetNumber) {
-            result[targetIndex] = 1;
-
-            return;
-        }
-
-        if (currentNumber < targetNumber) {
-            start = mid + 1;
-        }
-
-        if (currentNumber > targetNumber) {
-            end = mid - 1;
-        }
-
-        binarySearch(start, end, targetIndex);
+        return false;
     }
-
-    private static void output() {
-        Arrays.stream(result).forEach(System.out::println);
-    }
-
 }
