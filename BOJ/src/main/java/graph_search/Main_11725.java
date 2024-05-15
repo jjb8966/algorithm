@@ -10,21 +10,19 @@ public class Main_11725 {
     public static void main(String[] args) throws IOException {
         // init
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
 
         int numberOfNode = Integer.parseInt(br.readLine());
-        int numberOfPair = numberOfNode - 1;
-        int[] parent = new int[numberOfNode + 1];
-        boolean[] visited = new boolean[numberOfNode + 1];
         List<Integer>[] adjacencyList = new List[numberOfNode + 1];
+        boolean[] visited = new boolean[numberOfNode + 1];
+        int[] parent = new int[numberOfNode + 1];
 
-        for (int i = 0; i < numberOfNode + 1; i++) {
+        for (int i = 1; i <= numberOfNode; i++) {
             adjacencyList[i] = new ArrayList();
         }
 
-        StringTokenizer st;
-        for (int i = 0; i < numberOfPair; i++) {
+        for (int i = 0; i < numberOfNode - 1; i++) {
             st = new StringTokenizer(br.readLine());
-
             int a = Integer.parseInt(st.nextToken());
             int b = Integer.parseInt(st.nextToken());
 
@@ -33,8 +31,8 @@ public class Main_11725 {
         }
 
         // process
-//        dfs(1, parent, visited, adjacencyList);
-        bfs(1, parent, visited, adjacencyList);
+//        dfs(1, adjacencyList, visited, parent);
+        bfs(1, adjacencyList, visited, parent);
 
         // output
         for (int vertex = 2; vertex <= numberOfNode; vertex++) {
@@ -42,10 +40,11 @@ public class Main_11725 {
         }
     }
 
-    private static void dfs(int vertex,
-                            int[] parent,
+
+    private static void dfs(int vertex, 
+                            List<Integer>[] adjacencyList,
                             boolean[] visited,
-                            List<Integer>[] adjacencyList) {
+                            int[] parent) {
         visited[vertex] = true;
 
         for (Integer connectVertex : adjacencyList[vertex]) {
@@ -55,18 +54,17 @@ public class Main_11725 {
 
             visited[connectVertex] = true;
             parent[connectVertex] = vertex;
-            dfs(connectVertex, parent, visited, adjacencyList);
+            dfs(connectVertex, adjacencyList, visited, parent);
         }
     }
 
-    private static void bfs(int startVertex,
-                            int[] parent,
+    private static void bfs(int start,
+                            List<Integer>[] adjacencyList,
                             boolean[] visited,
-                            List<Integer>[] adjacencyList) {
+                            int[] parent) {
         Queue<Integer> queue = new LinkedList<>();
-
-        visited[startVertex] = true;
-        queue.offer(startVertex);
+        visited[start] = true;
+        queue.offer(start);
 
         while (!queue.isEmpty()) {
             Integer vertex = queue.poll();
