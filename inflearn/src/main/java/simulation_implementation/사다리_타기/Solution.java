@@ -1,4 +1,8 @@
-import java.util.*;
+package simulation_implementation.사다리_타기;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 class Solution {
 	public char[] solution(int n, int[][] ladder){

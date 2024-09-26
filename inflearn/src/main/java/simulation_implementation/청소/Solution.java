@@ -1,5 +1,6 @@
-import java.util.*;
-import java.util.ArrayList;
+package simulation_implementation.청소;
+
+import java.util.Arrays;
 
 class Solution {
 	public int[] solution(int[][] board, int k){
