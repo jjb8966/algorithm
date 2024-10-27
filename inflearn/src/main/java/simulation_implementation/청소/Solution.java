@@ -8,10 +8,10 @@ class Solution {
 		int[] answer = new int[2];
 		int n = board.length;
 		int[][] direction = {
-			{1, 0},
 			{0, 1},
-			{-1, 0},
-			{0, -1}
+			{1, 0},
+			{0, -1},
+			{-1, 0}
 		};
 
 		// process
@@ -37,7 +37,7 @@ class Solution {
 			}
 
 			// 2.
-			if(board[y][x] == 1) {
+			if(board[x][y] == 1) {
 				time++;
 				currentDir = (currentDir + 1) % 4;
 				x = previousX;
@@ -49,8 +49,8 @@ class Solution {
 			time++;
 		}
 
-		answer[0] = y;
-		answer[1] = x;
+		answer[0] = x;
+		answer[1] = y;
 
 		return answer;
 	}
