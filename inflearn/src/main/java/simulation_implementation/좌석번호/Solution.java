@@ -18,6 +18,13 @@ class Solution {
         int y = 1;
         int count = 1;
         int dir = 0;
+        visited[x][y] = true;
+
+        if (k > (c * r)) {
+            answer[0] = 0;
+            answer[1] = 0;
+            return answer;
+        }
 
         while(count < k) {
             int newX = x + direction[dir][0];
@@ -35,7 +42,8 @@ class Solution {
 
             x = newX;
             y = newY;
-            
+
+            visited[x][y] = true;
             count++;
         }
 
