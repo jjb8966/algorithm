@@ -1,4 +1,4 @@
-package hash.한_번_사용한_최초문자;
+package hash.한_번만_사용한_최초문자;
 
 import java.util.HashMap;
 
